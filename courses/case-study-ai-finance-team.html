@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Building an AI Finance Assistant Team — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study แบบ interactive: จำลองทีมผู้ช่วย AI การเงินที่คุยกันพร้อม dashboard — web search API, subagents, hooks (ไม่ใช่คำแนะนำการลงทุน)">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-study-ai-finance-team" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>AI Finance Assistant</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 29 (จำลองทีม)</span>
+      <h1>Building an AI Finance<br>Assistant Team</h1>
+      <p class="lead">จำลองทีมผู้ช่วย AI การเงินที่คุยกันจริง พร้อม dashboard — รวบรวมราคา/งบ/ข่าวด้วย Web Search API, สรุปตามกรอบ และออกรายงานพร้อมความเสี่ยง โดยมนุษย์ตัดสินใจขั้นสุดท้าย</p>
+      <div class="meta-row"><span>🎮 จำลองแบบ interactive</span><span>📊 ระดับสูง</span><span>🎯 เน้นออกแบบระบบ + ใช้ Claude</span></div>
+    </header>
+
+    <div class="disclaimer">
+      <h4>⚠️ ข้อจำกัดความรับผิดชอบ — ไม่ใช่คำแนะนำการลงทุน (Not Financial Advice)</h4>
+      <p>เนื้อหานี้สอน <strong>วิธีออกแบบระบบและใช้งาน Claude</strong> เพื่อรวบรวม/สรุป/วิเคราะห์ข้อมูลเท่านั้น <strong>ไม่ใช่</strong>คำแนะนำให้ซื้อ/ขาย/ถือสินทรัพย์ใดๆ</p>
+      <p>การลงทุนมีความเสี่ยง · ผลในอดีตไม่รับประกันผลในอนาคต · AI อาจให้ข้อมูลผิดพลาดได้ <strong>โปรดปรึกษาผู้เชี่ยวชาญด้านการเงินที่มีใบอนุญาตก่อนตัดสินใจลงทุนจริง</strong></p>
+    </div>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>วิธีใช้หน้านี้</strong> กด <strong>▶ เริ่มจำลอง</strong> ดูทีมการเงินคุยกันรวบรวม-วิเคราะห์ข้อมูลทีละขั้น แล้วคัดลอก <strong>prompt สรุป</strong> ไปลองใช้ได้เลย</div></div>
+
+    <h2><span class="h-ico">🎮</span> จำลองทีม: รวบรวม–วิเคราะห์ข้อมูลหุ้น (TICKER)</h2>
+    <div id="cs-mount"></div>
+
+    <h2><span class="h-ico">📋</span> Prompt สรุป — คัดลอกไปใช้ได้เลย</h2>
+    <div class="prompt-box">
+      <div class="pb-head"><span>📈</span> Master Prompt — ตั้งทีมผู้ช่วยข้อมูลการเงิน</div>
+      <pre><code>ช่วยตั้งทีมผู้ช่วย "รวบรวม/วิเคราะห์ข้อมูลการเงิน" (ย้ำ: ไม่ใช่คำแนะนำการลงทุน):
+
+1) เพิ่มหลักการใน CLAUDE.md:
+   - หน้าที่ = รวบรวม สรุป วิเคราะห์ข้อมูลเท่านั้น
+   - ห้ามให้คำแนะนำซื้อ/ขาย หรือทำนายราคาแบบชี้นำ
+   - อ้างอิงแหล่งที่มาเสมอ + ระบุความไม่แน่นอน/ความเสี่ยง
+   - แนบ disclaimer "ไม่ใช่คำแนะนำการลงทุน" ทุกรายงาน
+
+2) สร้าง subagents ใน .claude/agents/ :
+   - data-collector     : ดึงราคา/งบ (อ่านอย่างเดียว)
+   - news-aggregator    : WebSearch, WebFetch — สรุปข่าว + อ้างอิง URL
+   - fundamental-analyst: สรุปงบ/อัตราส่วนตามกรอบ (ไม่ชี้นำ)
+   - risk-reporter      : read-only — เรียบเรียงรายงาน + ความเสี่ยง + disclaimer
+
+3) ตั้ง hook PreToolUse บันทึก audit log ทุกครั้งที่เรียก market-data/web search
+
+4) เมื่อฉันให้ ticker: ดึงราคา/งบ + ค้นข่าว (มี citation) →
+   สรุปพื้นฐานตามกรอบ → ออกรายงานพร้อม "ความเสี่ยง" + disclaimer
+
+ย้ำ: ผลลัพธ์เพื่อการศึกษา ฉัน (มนุษย์) เป็นผู้ตัดสินใจเอง</code></pre>
+    </div>
+
+    <h2><span class="h-ico">🧩</span> เบื้องหลังแต่ละขั้น (อ้างอิงโค้ดจริง)</h2>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="f1">subagent ตามหน้าที่ (least privilege)</h3>
+      <pre><code><span class="cmt"># .claude/agents/news-aggregator.md</span>
+---
+name: news-aggregator
+description: รวบรวม/สรุปข่าวตลาดล่าสุด ใช้เมื่อผู้ใช้ขอ "ข่าวล่าสุด"
+tools: Read, WebSearch, WebFetch
+model: sonnet
+---
+สรุปเฉพาะข้อเท็จจริงจากแหล่งน่าเชื่อถือ อ้างอิง URL ทุกครั้ง
+แยก "ข้อเท็จจริง" จาก "ความเห็น" — ห้ามสรุปเป็นคำแนะนำซื้อ/ขาย</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="f2">Web Search API — ดึงข่าว/ราคาแบบมี citation</h3>
+      <p><strong>ทำไม:</strong> web search เป็น <em>server tool</em> (Anthropic รันให้) คืนคำตอบพร้อมแหล่งอ้างอิง เหมาะกับข้อมูลเกินวันตัดความรู้ของโมเดล</p>
+      <pre><code><span class="kw">import</span> anthropic
+client = anthropic.Anthropic()
+response = client.messages.create(
+    model=<span class="str">"claude-opus-4-8"</span>, max_tokens=<span class="str">1024</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>,
+        <span class="str">"content"</span>: <span class="str">"สรุปข่าวล่าสุดที่กระทบราคาน้ำมันสัปดาห์นี้ พร้อมแหล่งอ้างอิง"</span>}],
+    tools=[{<span class="str">"type"</span>: <span class="str">"web_search_20250305"</span>, <span class="str">"name"</span>: <span class="str">"web_search"</span>, <span class="str">"max_uses"</span>: <span class="str">5</span>}],
+)</code></pre>
+      <div class="callout info"><div class="c-ico">🔎</div><div class="c-body">มีรุ่นใหม่ <code>web_search_20260209</code> (dynamic filtering) ด้วย — <em>ตรวจ version string + โมเดลที่รองรับกับ <a class="link" href="https://platform.claude.com/docs/en/build-with-claude/tool-use/web-search-tool" target="_blank" rel="noopener">docs ล่าสุด</a></em> · ต้องเปิดใช้งานใน Claude Console ก่อน</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="f3">Hooks audit log เพื่อ compliance</h3>
+      <pre><code><span class="cmt">// .claude/settings.json</span>
+{ "hooks": { "PreToolUse": [{
+  "matcher": "mcp__market-data__.*|WebSearch",
+  "hooks": [{ "type": "command", "command": ".claude/hooks/audit-log.sh" }]
+}]}}</code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">ทุกการเรียก market-data/web search ถูกบันทึกเวลา+ชื่อ tool อัตโนมัติ — ตรวจสอบย้อนหลังได้</div></div>
+    </div></div>
+
+    <div class="disclaimer">
+      <h4>⚠️ ย้ำอีกครั้ง</h4>
+      <p>ผลลัพธ์ทั้งหมดเป็นการรวบรวม/วิเคราะห์ข้อมูลเพื่อการศึกษา <strong>ไม่ใช่คำแนะนำการลงทุน</strong> — ตรวจสอบกับแหล่งทางการ และปรึกษาที่ปรึกษาการเงินที่มีใบอนุญาตก่อนตัดสินใจจริง</p>
+    </div>
+
+    <div class="takeaways">
+      <h3>✅ ฟีเจอร์ที่ใช้ครบใน Case Study นี้</h3>
+      <ul>
+        <li><strong>Subagents</strong> — data-collector / analyst / news / risk-reporter แยก context + least privilege</li>
+        <li><strong>API Web Search</strong> — server tool พร้อม citation (<code>web_search_20250305</code>/<code>20260209</code>)</li>
+        <li><strong>MCP</strong> — แหล่งข้อมูลตลาด (read-only + ตรวจ ToS)</li>
+        <li><strong>Hooks</strong> — PreToolUse audit log เพื่อ compliance</li>
+        <li><strong>ความรับผิดชอบ</strong> — หลักการใน CLAUDE.md + disclaimer ทุกรายงาน + มนุษย์ตัดสินใจ</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.CASE_STUDY = {
+      accent: "#7c6aa8",
+      deliverableLabel: "ข้อมูล/รายงาน",
+      agents: [
+        { id: "coord",    name: "Claude (หัวหน้าทีม)", role: "Coordinator", avatar: "🧭", color: "#cc785c" },
+        { id: "collector",name: "Data Collector",     role: "ราคา/งบการเงิน", avatar: "📥", color: "#5b7a8c" },
+        { id: "news",     name: "News Aggregator",     role: "ข่าว + citation", avatar: "📰", color: "#c08a2e" },
+        { id: "analyst",  name: "Fundamental Analyst", role: "สรุปพื้นฐาน", avatar: "📊", color: "#7c6aa8" },
+        { id: "risk",     name: "Risk Reporter",       role: "รายงาน/ความเสี่ยง", avatar: "🛡️", color: "#2f9e8f" },
+      ],
+      script: [
+        { from: "system", phase: "รับโจทย์", text: "👤 ผู้ใช้: “ช่วยรวบรวมและสรุปข้อมูลของหุ้น TICKER เพื่อประกอบการพิจารณา”" },
+        { from: "coord", phase: "รับโจทย์", text: "รับทราบครับ — ย้ำว่านี่คือการ <b>รวบรวม/วิเคราะห์ข้อมูล ไม่ใช่คำแนะนำลงทุน</b> เริ่มมอบงานทีม" },
+        { from: "coord", phase: "รวบรวมข้อมูล", text: "@collector ดึงราคา/งบล่าสุด · @news หาข่าวที่เกี่ยวข้อง" },
+        { from: "tool", name: "mcp · market-data.get_quotes(TICKER, 30d)", text: "คืนราคาย้อนหลัง 30 วัน + อัตราส่วนพื้นฐาน" },
+        { from: "collector", phase: "รวบรวมข้อมูล", deliverable: true, text: "จัดราคาย้อนหลัง + งบล่าสุดเป็นตารางเรียบร้อย ✓" },
+        { from: "tool", name: "web_search('TICKER ข่าวล่าสุด')", text: "5 แหล่ง พร้อม citations (url/title)" },
+        { from: "news", phase: "รวบรวมข้อมูล", deliverable: true, text: "สรุปข่าว 3 ประเด็นพร้อมอ้างอิง URL — แยกข้อเท็จจริงออกจากความเห็นของแหล่งข่าว ✓" },
+        { from: "coord", phase: "วิเคราะห์", text: "@analyst สรุปพื้นฐานตามกรอบมาตรฐาน (ไม่ชี้นำ)" },
+        { from: "analyst", phase: "วิเคราะห์", deliverable: true, text: "สรุป: รายได้/กำไรแนวโน้ม 3 ปี · <code>P/E, D/E, ROE</code> · พร้อมระบุสมมุติฐานและความไม่แน่นอน" },
+        { from: "coord", phase: "รายงาน + ความเสี่ยง", text: "@risk เรียบเรียงรายงานรวม + ระบุความเสี่ยง + แนบ disclaimer" },
+        { from: "tool", name: "hook · PreToolUse (audit)", text: "บันทึก audit log: market-data, web_search ✓ (compliance)" },
+        { from: "risk", phase: "รายงาน + ความเสี่ยง", deliverable: true, text: "รายงานพร้อม: ข้อมูล + ข่าว + พื้นฐาน + ส่วน <b>“ความเสี่ยง/ข้อควรระวัง”</b> + disclaimer ปิดท้าย" },
+        { from: "coord", phase: "รายงาน + ความเสี่ยง", text: "ส่งรายงานให้ผู้ใช้ — เป็น <b>วัตถุดิบประกอบการตัดสินใจ</b> ไม่ใช่คำสั่งซื้อขาย" },
+        { from: "system", phase: "เสร็จสิ้น", text: "⚠️ ไม่ใช่คำแนะนำการลงทุน — ตรวจกับแหล่งทางการ และปรึกษาผู้มีใบอนุญาตก่อนตัดสินใจจริง · มนุษย์ตัดสินใจขั้นสุดท้ายเสมอ" },
+      ],
+    };
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/case-study.js"></script>
+</body>
+</html>

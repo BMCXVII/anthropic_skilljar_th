@@ -1,0 +1,122 @@
+/* ============================================================
+   Course catalog — single source of truth for hub + sidebar
+   อิงข้อมูลจริงจาก anthropic_academy_courses.json (18 คอร์ส)
+   ============================================================ */
+window.CATEGORIES = {
+  foundations: { title: "เริ่มต้นกับ Claude", ico: "🚀", color: "#cc785c",
+    desc: "พื้นฐานการใช้ Claude และความเข้าใจเรื่องความสามารถของ AI" },
+  code: { title: "Claude Code & Cowork", ico: "💻", color: "#5b7a8c",
+    desc: "เครื่องมือสำหรับนักพัฒนา: coding agent, skills, subagents, cowork" },
+  apimcp: { title: "API & Model Context Protocol", ico: "🔌", color: "#7c6aa8",
+    desc: "เชื่อมต่อ Claude ผ่าน API และต่อขยายด้วย MCP" },
+  cloud: { title: "Cloud Platforms", ico: "☁️", color: "#4f8a5b",
+    desc: "ใช้งาน Claude บน AWS Bedrock และ Google Vertex AI" },
+  fluency: { title: "AI Fluency", ico: "🧠", color: "#c08a2e",
+    desc: "กรอบคิดการทำงานร่วมกับ AI อย่างมีประสิทธิภาพและมีจริยธรรม" },
+  casestudy: { title: "Case Studies (ลงมือทำจริง)", ico: "🏗️", color: "#2f9e8f",
+    desc: "จำลองทีม AI agent ที่คุยกันจริง พร้อม dashboard — ประกอบทุกฟีเจอร์เข้าด้วยกัน" },
+};
+
+window.COURSES = [
+  // ---- Foundations ----
+  { slug: "claude-101", cat: "foundations", num: "01",
+    title: "Claude 101", level: "เริ่มต้น", time: "14 บท", ico: "🤖",
+    desc: "ใช้ Claude เป็น thinking partner ในงานประจำวัน — Projects, Artifacts, Skills, Connectors, Research mode" },
+  { slug: "ai-capabilities-limitations", cat: "foundations", num: "02",
+    title: "AI Capabilities & Limitations", level: "เริ่มต้น–กลาง", time: "14 บท", ico: "⚖️",
+    desc: "เข้าใจโมเดลผ่าน 4 properties: Next Token Prediction, Knowledge, Working Memory, Steerability" },
+
+  // ---- Claude Code & Cowork ----
+  { slug: "claude-code-101", cat: "code", num: "03",
+    title: "Claude Code 101", level: "เริ่มต้น (dev)", time: "13 บท", ico: "⌨️",
+    desc: "พื้นฐาน coding agent กับ workflow Explore → Plan → Code → Commit + CLAUDE.md/Subagents/Skills/MCP/Hooks" },
+  { slug: "claude-code-in-action", cat: "code", num: "04",
+    title: "Claude Code in Action", level: "ปานกลาง (dev)", time: "21 บท", ico: "🛠️",
+    desc: "Claude Code เชิงลึก hands-on: custom commands, MCP (Playwright), GitHub, Hooks ครบ event, Agent SDK" },
+  { slug: "claude-cowork", cat: "code", num: "05",
+    title: "Introduction to Claude Cowork", level: "เริ่มต้น", time: "15 บท", ico: "🤝",
+    desc: "Agent บนเดสก์ท็อปที่ทำงาน multi-step บนไฟล์จริง: global instructions, projects, skills, plugins" },
+  { slug: "agent-skills", cat: "code", num: "06",
+    title: "Introduction to Agent Skills", level: "เริ่มต้น–กลาง", time: "6 บท", ico: "📦",
+    desc: "สร้าง Skills (SKILL.md) — semantic matching, progressive disclosure, sharing ผ่าน Git/plugins" },
+  { slug: "subagents", cat: "code", num: "07",
+    title: "Introduction to Subagents", level: "เริ่มต้น–กลาง", time: "4 บท", ico: "🧩",
+    desc: "ผู้ช่วยเฉพาะทางใน context แยก สร้างด้วย /agents — ออกแบบให้ดี 4 ข้อ ใช้แยก exploration จาก execution" },
+
+  // ---- API & MCP ----
+  { slug: "claude-api", cat: "apimcp", num: "08",
+    title: "Building with the Claude API", level: "สูง (engineer)", time: "85 บท", ico: "🔧",
+    desc: "คอร์สใหญ่สุด: API stateless, prompt eval/engineering, tool use, RAG, features, MCP, agents & workflows" },
+  { slug: "mcp-intro", cat: "apimcp", num: "09",
+    title: "Introduction to MCP", level: "ปานกลาง (dev)", time: "14 บท", ico: "🔌",
+    desc: "communication layer เชื่อม Claude กับ tools/data — Python SDK + decorators, server inspector, resources/prompts" },
+  { slug: "mcp-advanced", cat: "apimcp", num: "10",
+    title: "MCP: Advanced Topics", level: "สูง (dev)", time: "15 บท", ico: "🏗️",
+    desc: "MCP ขั้นสูง: Sampling, log/progress notifications, Roots, Transports (STDIO/StreamableHTTP + state)" },
+
+  // ---- Cloud ----
+  { slug: "claude-bedrock", cat: "cloud", num: "11",
+    title: "Claude with Amazon Bedrock", level: "สูง (engineer)", time: "83 บท", ico: "🟧",
+    desc: "เทียบเท่าคอร์ส API ผ่าน Bedrock + reranking, contextual retrieval, parallelizing, Computer Use" },
+  { slug: "claude-vertex-ai", cat: "cloud", num: "12",
+    title: "Claude with Google Vertex AI", level: "สูง (engineer)", time: "~80 บท", ico: "🔵",
+    desc: "เทียบเท่าคอร์ส API/Bedrock ผ่าน Vertex AI — เพิ่ม Vertex AI Setup, RAG ครบ, MCP, Computer Use" },
+
+  // ---- AI Fluency ----
+  { slug: "ai-fluency-foundations", cat: "fluency", num: "13",
+    title: "AI Fluency: Framework & Foundations", level: "Foundational", time: "~20 บท", ico: "🧠",
+    desc: "คอร์สแกน 4D: Delegation, Description, Discernment, Diligence + Automation/Augmentation/Agency" },
+  { slug: "ai-fluency-students", cat: "fluency", num: "14",
+    title: "AI Fluency for Students", level: "Foundational", time: "6 บท", ico: "🎓",
+    desc: "ใช้ AI เป็น learning partner — เสริมการคิด, career planning, เป็น human in the loop" },
+  { slug: "ai-fluency-educators", cat: "fluency", num: "15",
+    title: "AI Fluency for Educators", level: "Foundational", time: "5 บท", ico: "👩‍🏫",
+    desc: "ใช้ 4D ออกแบบหลักสูตร/learning outcomes/สื่อ/assignment บนฐาน pedagogical integrity" },
+  { slug: "teaching-ai-fluency", cat: "fluency", num: "16",
+    title: "Teaching AI Fluency", level: "Foundational", time: "8 บท", ico: "📚",
+    desc: "สอน AI Fluency: Delegation-Diligence & Description-Discernment loop, ประเมิน 4Ds, ตามสาขาวิชา" },
+  { slug: "ai-fluency-nonprofits", cat: "fluency", num: "17",
+    title: "AI Fluency for Nonprofits", level: "Foundational", time: "10 บท", ico: "💛",
+    desc: "4D กับงาน nonprofit: research/writing with AI, privacy & data, workflow augmentation ยึด mission" },
+  { slug: "ai-fluency-small-business", cat: "fluency", num: "18",
+    title: "AI Fluency for Small Businesses", level: "Foundational", time: "10 บท", ico: "🏪",
+    desc: "4D กับธุรกิจเล็ก: refining with AI, transparent AI use, verify claims, human in the loop" },
+
+  // ---- Case Studies (ลงมือทำจริง) ----
+  // 9 เคส step-by-step รายหัวข้อ (ใหม่) — วางไว้ก่อน 2 เคสจำลองทีมเดิม
+  { slug: "case-claude-code", cat: "casestudy", num: "19",
+    title: "Case Study: Claude Code", level: "ลงมือทำ", time: "step-by-step", ico: "⌨️",
+    desc: "เพิ่มฟีเจอร์จริงด้วย Explore → Plan → Code → Commit ทีละขั้น (dark mode toggle)" },
+  { slug: "case-claude-cowork", cat: "casestudy", num: "20",
+    title: "Case Study: Claude Cowork", level: "ลงมือทำ", time: "step-by-step", ico: "🤝",
+    desc: "ให้ Cowork รวมไฟล์หลายตัวเป็นรายงานสรุป (artifact) จบในเซสชันเดียว" },
+  { slug: "case-skill", cat: "casestudy", num: "21",
+    title: "Case Study: Skill", level: "ลงมือทำ", time: "step-by-step", ico: "📦",
+    desc: "สร้าง Skill (SKILL.md) playbook เขียน PR description ให้สม่ำเสมอ + แชร์ทีมผ่าน Git" },
+  { slug: "case-hook", cat: "casestudy", num: "22",
+    title: "Case Study: Hook", level: "ลงมือทำ", time: "step-by-step", ico: "🪝",
+    desc: "ตั้ง Hook: PostToolUse auto-format และ PreToolUse บล็อกอ่าน .env / คำสั่งอันตราย" },
+  { slug: "case-sdk", cat: "casestudy", num: "23",
+    title: "Case Study: Agent SDK", level: "ลงมือทำ", time: "step-by-step", ico: "🧰",
+    desc: "ใช้ @anthropic-ai/claude-agent-sdk รัน Claude Code แบบ programmatic ในสคริปต์/CI" },
+  { slug: "case-api", cat: "casestudy", num: "24",
+    title: "Case Study: Claude API", level: "ลงมือทำ", time: "step-by-step", ico: "🔧",
+    desc: "ทำแชตบอตที่จำบทสนทนา (stateless) + เรียก tool ภายนอกได้ด้วย tool use" },
+  { slug: "case-mcp", cat: "casestudy", num: "25",
+    title: "Case Study: MCP", level: "ลงมือทำ", time: "step-by-step", ico: "🔌",
+    desc: "สร้าง MCP server (Python SDK) expose tools/resources แล้วต่อเข้ากับ Claude Code" },
+  { slug: "case-agent", cat: "casestudy", num: "26",
+    title: "Case Study: Agent", level: "ลงมือทำ", time: "step-by-step", ico: "🤖",
+    desc: "ออกแบบ agent ที่มี goal + tools แล้วลงมือเอง เทียบ workflow และเลือกใช้ให้เหมาะ" },
+  { slug: "case-subagent", cat: "casestudy", num: "27",
+    title: "Case Study: Subagent", level: "ลงมือทำ", time: "step-by-step", ico: "🧩",
+    desc: "ใช้ subagent (context แยก) สำรวจ/รีวิวโค้ดแล้วส่งสรุปกลับ main thread" },
+
+  // ---- Case Studies แบบ interactive (จำลองทีม) ----
+  { slug: "case-study-ai-dev-team", cat: "casestudy", num: "28",
+    title: "Case Study: AI Dev Team", level: "สูง · จำลองทีม", time: "interactive", ico: "👩‍💻",
+    desc: "จำลองทีม AI developer ที่คุยกันจริง + dashboard ตั้งแต่รับ requirement จนส่งมอบ: subagents, skills, MCP, RAG, hooks" },
+  { slug: "case-study-ai-finance-team", cat: "casestudy", num: "29",
+    title: "Case Study: AI Finance Assistant", level: "สูง · จำลองทีม", time: "interactive", ico: "📈",
+    desc: "จำลองทีมผู้ช่วยการเงินที่คุยกัน + dashboard: web search API, subagents, hooks (ไม่ใช่คำแนะนำการลงทุน)" },
+];

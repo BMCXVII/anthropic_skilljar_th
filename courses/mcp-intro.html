@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction to MCP — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Introduction to Model Context Protocol: communication layer, สร้าง server/client ด้วย Python SDK, tools/resources/prompts และ server inspector">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="mcp-intro" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>API &amp; MCP</span> › <span>Introduction to MCP</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🔌 API &amp; MCP · คอร์ส 09</span>
+      <h1>Introduction to Model Context Protocol</h1>
+      <p class="lead">MCP คือ <b>communication layer</b> ที่ให้ context และ tools กับ Claude โดยไม่ต้องเขียนโค้ด integration เอง — คอร์สนี้พาสร้าง server/client ด้วย Python SDK</p>
+      <div class="meta-row">
+        <span>⏱️ 14 บท · ระดับปานกลาง (dev)</span>
+        <span>🎥 วิดีโอเล่นบนแพลตฟอร์ม (ต้อง login)</span>
+        <span>📌 สถานะ: ลงทะเบียนแล้ว</span>
+      </div>
+    </header>
+
+    <p class="section-intro">เรียบเรียงตามลำดับบทเรียนจริง: เข้าใจว่า MCP คืออะไรและแก้ปัญหาอะไร → ลงมือสร้าง server → ต่อด้วย client พร้อม resources และ prompts</p>
+
+    <h2><span class="h-ico">🔌</span> MCP คืออะไรและแก้ปัญหาอะไร</h2>
+    <p>ลองนึกถึงแอปแชทที่อยากให้ LLM เข้าถึงเครื่องมือ เช่น GitHub — ปกติต้องเขียนโค้ดเชื่อมต่อเองทุกครั้ง <strong>MCP</strong> ทำให้สิ่งนี้กลายเป็นมาตรฐานกลาง: แทนที่จะเขียน integration เอง ก็เชื่อมผ่าน MCP ที่ให้ทั้ง <strong>tools / resources / prompts</strong> ผ่านสถาปัตยกรรม <strong>client/server</strong></p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/mcp-intro-sample-app.png" alt="Sample App — chat + GitHub tools" loading="lazy"><figcaption>Sample App — chat ที่ใช้ LLM + tools เข้าถึง GitHub (ปัญหาที่ MCP แก้)</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/mcp-intro-architecture.png" alt="สถาปัตยกรรม MCP" loading="lazy"><figcaption>สถาปัตยกรรม MCP (client/server, tools/prompts/resources)</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/mcp-intro-server-interface.png" alt="MCP server เป็น interface บริการภายนอก" loading="lazy"><figcaption>MCP server = interface ของบริการภายนอก</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/mcp-intro-summary.png" alt="สรุปการเชื่อม tools ผ่าน MCP" loading="lazy"><figcaption>สรุปการเชื่อม Claude กับ tools ภายนอกผ่าน MCP</figcaption></figure>
+    </div>
+    <div class="platform-video">
+      <div class="pv-ico">▶</div>
+      <div class="pv-body"><strong>วิดีโอบทเรียน: Introducing MCP</strong><span>วิดีโอเล่นบนแพลตฟอร์ม Anthropic Academy</span></div>
+      <a class="pv-btn" href="https://anthropic.skilljar.com/introduction-to-model-context-protocol/296689" target="_blank" rel="noopener">ดูในเว็บ (ต้อง login) ↗</a>
+    </div>
+
+    <h2><span class="h-ico">🧱</span> ลงมือสร้าง MCP server</h2>
+    <p>คอร์สใช้โปรเจกต์ <code>cli_project.zip</code> สร้าง tools ด้วย <strong>Python SDK + decorators</strong> และใช้ <strong>server inspector</strong> เพื่อ debug การทำงานแบบ real-time ก่อนเอาไปต่อกับ client จริง</p>
+
+    <h2><span class="h-ico">🔗</span> ต่อด้วย client, resources และ prompts</h2>
+    <p>ฝั่ง client จะ "คุย" กับ server ผ่าน protocol โดยมี 3 ส่วนหลัก:</p>
+    <div class="grid cols-3">
+      <div class="tile"><div class="t-ico">🛠️</div><h4>Tools</h4><p>ฟังก์ชันที่ Claude เรียกใช้เพื่อทำงาน/ดึงข้อมูล</p></div>
+      <div class="tile"><div class="t-ico">📄</div><h4>Resources</h4><p>expose ข้อมูลแบบอ่านอย่างเดียว (คล้าย GET handler) ใส่เข้าไปใน prompt ได้ตรง ๆ</p></div>
+      <div class="tile"><div class="t-ico">📝</div><h4>Prompts</h4><p>template คุณภาพสูงที่ client list/retrieve มาใช้พร้อมตัวแปรได้</p></div>
+    </div>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>MCP = communication layer ที่ให้ context + tools โดยไม่ต้องเขียน integration เอง</li>
+        <li>ใช้สถาปัตยกรรม client/server และมี 3 primitives: tools, resources, prompts</li>
+        <li>สร้าง server ด้วย Python SDK + decorators และ debug ด้วย server inspector</li>
+        <li>resources = ข้อมูลแบบ GET ใส่ใน prompt ได้, prompts = template พร้อมตัวแปร</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "MCP ช่วยแก้ปัญหาอะไรเป็นหลัก?",
+        opts: ["ทำให้โมเดลเร็วขึ้น", "เชื่อม Claude กับ tools/data ภายนอกแบบมาตรฐาน โดยไม่ต้องเขียน integration เองทุกครั้ง", "บีบอัดรูปภาพ", "ตั้งธีมสี"],
+        answer: 1, explain: "MCP เป็น communication layer มาตรฐานที่ทำให้ต่อ tools/data ภายนอกได้โดยไม่ต้องเขียนโค้ดเชื่อมเอง" },
+      { q: "สถาปัตยกรรมหลักของ MCP คือ?",
+        opts: ["peer-to-peer", "client/server", "serverless เท่านั้น", "monolith"],
+        answer: 1, explain: "MCP ใช้รูปแบบ client/server" },
+      { q: "3 primitives ของ MCP คืออะไร?",
+        opts: ["tools, resources, prompts", "models, tokens, weights", "chat, code, cowork", "GET, POST, PUT"],
+        answer: 0, explain: "MCP มี tools (ฟังก์ชัน), resources (ข้อมูลแบบอ่าน) และ prompts (template)" },
+      { q: "Resources ใน MCP เทียบได้กับอะไร?",
+        opts: ["POST handler", "GET handler (ข้อมูลแบบอ่านอย่างเดียว)", "ไฟล์ log", "โมเดล"],
+        answer: 1, explain: "resources expose ข้อมูลแบบอ่านคล้าย GET handler และใส่ลงใน prompt ได้ตรง ๆ" },
+      { q: "เครื่องมือใดใช้ debug MCP server แบบ real-time?",
+        opts: ["server inspector", "/compact", "Playwright", "tsc"],
+        answer: 0, explain: "server inspector ใช้ตรวจสอบ/ดีบักการทำงานของ MCP server ได้แบบ real-time" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

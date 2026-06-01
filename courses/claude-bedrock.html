@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude with Amazon Bedrock — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Claude with Amazon Bedrock: เทียบเท่าคอร์ส API ผ่าน Amazon Bedrock + Reranking, Contextual retrieval, Computer Use, Parallelizing Claude Code และ Automated debugging">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="claude-bedrock" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Cloud Platforms</span> › <span>Claude with Amazon Bedrock</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">☁️ Cloud Platforms · คอร์ส 11</span>
+      <h1>Claude with Amazon Bedrock</h1>
+      <p class="lead">เนื้อหาเทียบเท่าคอร์ส <b>Building with the Claude API</b> แต่เรียก Claude ผ่าน <b>Amazon Bedrock</b> — บวกหัวข้อพิเศษด้าน RAG, Computer Use และ Claude Code</p>
+      <div class="meta-row">
+        <span>⏱️ 83 บท · ระดับสูง (engineer)</span>
+        <span>🎥 วิดีโอเล่นบนแพลตฟอร์ม (ต้อง login)</span>
+        <span>📌 สถานะ: ลงทะเบียนแล้ว</span>
+      </div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">ℹ️</div><div class="c-body"><strong>โครงสร้างเหมือนคอร์ส API</strong> เนื้อหาหลัก (API basics, prompt engineering/eval, tool use, RAG, features, MCP, agents) เหมือนกับ <a class="link" href="claude-api.html">Building with the Claude API</a> เพียงเปลี่ยน endpoint เป็น Bedrock — ด้านล่างเน้น <strong>เฉพาะหัวข้อที่ต่าง/เพิ่มเข้ามา</strong></div></div>
+
+    <h2><span class="h-ico">🔎</span> RAG ที่แม่นขึ้น: Reranking + Contextual retrieval</h2>
+    <div class="grid cols-2">
+      <div class="tile"><div class="t-ico">🔝</div><h4>Reranking results</h4><p>หลัง hybrid retrieval ผลที่ได้อาจเรียงไม่ดีเมื่อค้นด้วย term เฉพาะหรือตัวย่อ — reranking จัดอันดับใหม่ให้ผลที่ตรงที่สุดขึ้นมาก่อน</p></div>
+      <div class="tile"><div class="t-ico">🧩</div><h4>Contextual retrieval</h4><p>แก้ปัญหา chunk ที่เสีย context — ให้ Claude เติม context ใส่แต่ละ chunk ก่อนเก็บ ทำให้ค้นเจอแม่นขึ้น</p></div>
+    </div>
+
+    <h2><span class="h-ico">🖥️</span> Computer Use</h2>
+    <p>Claude สามารถ <strong>ควบคุม UI/หน้าจอ</strong> ได้ — ทำงานคล้าย tool use แต่ส่งเป็นคำขอ "ควบคุม computer interface" (เช่น คลิก พิมพ์ เลื่อนเมาส์) แทนการเรียกฟังก์ชันธรรมดา</p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/bedrock-computer-use-1.png" alt="Computer Use — ควบคุม UI/หน้าจอ" loading="lazy"><figcaption>Computer Use — Claude ควบคุม UI/หน้าจอ</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/bedrock-computer-use-2.png" alt="Computer Use ทำงานเหมือน tool use" loading="lazy"><figcaption>Computer Use ทำงานเหมือน tool use (ส่งคำขอควบคุม interface)</figcaption></figure>
+    </div>
+    <div class="platform-video">
+      <div class="pv-ico">▶</div>
+      <div class="pv-body"><strong>วิดีโอบทเรียน: Computer Use</strong><span>วิดีโอเล่นบนแพลตฟอร์ม Anthropic Academy</span></div>
+      <a class="pv-btn" href="https://anthropic.skilljar.com/claude-in-amazon-bedrock/276807" target="_blank" rel="noopener">ดูในเว็บ (ต้อง login) ↗</a>
+    </div>
+
+    <h2><span class="h-ico">🤖</span> Agents และ Claude Code บน Bedrock</h2>
+    <ul>
+      <li><strong>Agents overview + Claude Code:</strong> ใช้ Claude Code ผ่าน Bedrock ได้ (เช่น <code>/init</code> สร้าง <code>CLAUDE.md</code>)</li>
+      <li><strong>Parallelizing Claude Code:</strong> รัน Claude Code หลาย instance พร้อมกัน แต่ละตัวทำคนละงาน เพิ่ม productivity</li>
+      <li><strong>Automated debugging:</strong> ให้ Claude monitor production app แล้วแก้ error อัตโนมัติก่อนกระทบผู้ใช้</li>
+      <li><strong>Qualities of agents:</strong> รูปแบบที่ทำให้ agent สำเร็จ — focused tool usage, environmental awareness และ iterative execution</li>
+    </ul>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>เนื้อหาหลักเหมือนคอร์ส API แต่เรียก Claude ผ่าน Amazon Bedrock</li>
+        <li>RAG เพิ่ม Reranking (จัดอันดับผลใหม่) และ Contextual retrieval (เติม context ในแต่ละ chunk)</li>
+        <li>Computer Use ให้ Claude ควบคุม UI/หน้าจอ ทำงานคล้าย tool use</li>
+        <li>ใช้ Claude Code บน Bedrock ได้ + Parallelizing และ Automated debugging</li>
+        <li>agent ที่ดี = focused tool usage + environmental awareness + iterative execution</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "เนื้อหาหลักของคอร์ส Bedrock เทียบกับคอร์ส API เป็นอย่างไร?",
+        opts: ["ต่างกันทั้งหมด", "เหมือนกัน เพียงเปลี่ยน endpoint เป็น Bedrock และเพิ่มบางหัวข้อ", "สั้นกว่ามาก", "ไม่มี tool use"],
+        answer: 1, explain: "โครงสร้างเหมือนคอร์ส API แต่ผ่าน Bedrock และเพิ่มหัวข้อ เช่น reranking, Computer Use" },
+      { q: "Reranking ช่วยเรื่องอะไรใน RAG?",
+        opts: ["ลบ chunk", "จัดอันดับผลลัพธ์ใหม่ให้ตรงขึ้น โดยเฉพาะเมื่อค้นด้วย term เฉพาะ/ตัวย่อ", "บีบอัดข้อมูล", "เพิ่มความสุ่ม"],
+        answer: 1, explain: "reranking จัดอันดับผลหลัง hybrid retrieval ให้ผลที่ตรงที่สุดขึ้นมาก่อน" },
+      { q: "Contextual retrieval ทำอะไร?",
+        opts: ["ลบ context", "ให้ Claude เติม context ใส่แต่ละ chunk ก่อนเก็บ เพื่อความแม่นยำ", "เปลี่ยนโมเดล", "เพิ่มขนาด context window"],
+        answer: 1, explain: "แก้ปัญหา chunk ที่ขาด context โดยเติม context เข้าไปก่อนจัดเก็บ" },
+      { q: "Computer Use ทำงานคล้ายอะไร?",
+        opts: ["RAG", "tool use แต่ส่งคำขอควบคุม computer interface", "prompt caching", "streaming"],
+        answer: 1, explain: "Computer Use ทำงานคล้าย tool use แต่เป็นการควบคุม UI/หน้าจอ" },
+      { q: "‘Parallelizing Claude Code’ คือ?",
+        opts: ["รันทีละงาน", "รัน Claude Code หลาย instance พร้อมกัน แต่ละตัวคนละงาน", "ปิด Claude Code", "ใช้แทน RAG"],
+        answer: 1, explain: "รันหลาย instance พร้อมกันเพื่อทำงานหลายอย่างขนานกัน เพิ่ม productivity" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction to Agent Skills — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Introduction to Agent Skills: SKILL.md, semantic matching, progressive disclosure, การแชร์ + priority และ troubleshooting">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="agent-skills" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Claude Code &amp; Cowork</span> › <span>Introduction to Agent Skills</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">💻 Claude Code &amp; Cowork · คอร์ส 06</span>
+      <h1>Introduction to Agent Skills</h1>
+      <p class="lead">Skill คือ <b>โฟลเดอร์ + ไฟล์ SKILL.md</b> ที่สอนวิธีทำงานเฉพาะให้ Claude แล้วมันจะ <b>หยิบมาใช้เองเมื่อจำเป็น</b> ผ่าน semantic matching</p>
+      <div class="meta-row">
+        <span>⏱️ 6 บท · เริ่มต้น–กลาง</span>
+        <span>🎯 ใช้กับ Claude Code / Cowork</span>
+        <span>📌 สถานะ: ลงทะเบียนแล้ว</span>
+      </div>
+    </header>
+
+    <p class="section-intro">เรียบเรียงตามลำดับบทเรียนจริง: Skill คืออะไร → สร้างอันแรก → ตั้งค่า/หลายไฟล์ → ต่างจากฟีเจอร์อื่นยังไง → แชร์ → แก้ปัญหา</p>
+
+    <h2><span class="h-ico">📦</span> Skill คืออะไร</h2>
+    <p>Skill คือโฟลเดอร์ที่มีไฟล์ <code>SKILL.md</code> ซึ่งมี frontmatter อย่างน้อยคือ <strong>name + description</strong> ตอนเริ่มต้น Claude จะโหลดเฉพาะ <strong>ชื่อและคำอธิบาย</strong> ของทุก skill เข้ามาก่อน แล้วเมื่อ task ตรงกับ skill ไหน ก็ <strong>match ด้วย semantic matching</strong> แล้วค่อยโหลดเนื้อหาเต็ม (โหลดแบบ on demand) เก็บได้ทั้งแบบ personal (<code>~/.claude/skills</code>) และ project (<code>.claude/skills</code>)</p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/skills-structure.png" alt="โครงสร้าง skill" loading="lazy"><figcaption>โครงสร้าง skill (โฟลเดอร์ + SKILL.md frontmatter)</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/skills-semantic.png" alt="semantic matching / โหลด on demand" loading="lazy"><figcaption>semantic matching / การโหลด skill เมื่อจำเป็น (on demand)</figcaption></figure>
+    </div>
+    <div class="platform-video">
+      <div class="pv-ico">▶</div>
+      <div class="pv-body"><strong>บทเรียน: What are skills?</strong><span>ดูสไลด์/เนื้อหาเต็มบนแพลตฟอร์ม Anthropic Academy</span></div>
+      <a class="pv-btn" href="https://anthropic.skilljar.com/introduction-to-agent-skills/434525" target="_blank" rel="noopener">เปิดบทเรียน ↗</a>
+    </div>
+
+    <h2><span class="h-ico">🛠️</span> สร้าง ตั้งค่า และจัดโครงสร้าง</h2>
+    <ul>
+      <li><strong>สร้างอันแรก:</strong> เริ่มจากศูนย์ได้ (เช่น skill เขียน PR description) Claude จะ <strong>ขอ confirmation ก่อนโหลดเต็ม</strong> ลำดับความสำคัญเมื่อชื่อซ้ำ: Enterprise → Personal → Project → Plugins; แก้ก็แก้ <code>SKILL.md</code> ลบก็ลบโฟลเดอร์แล้ว restart</li>
+      <li><strong>Configuration:</strong> <code>name</code>/<code>description</code> จำเป็น ส่วน <code>allowed-tools</code>/<code>model</code> เป็นออปชัน</li>
+      <li><strong>Progressive disclosure:</strong> เก็บ <code>SKILL.md</code> ให้ &lt; 500 บรรทัด แล้ว link ไปไฟล์อื่น; <strong>scripts รันได้โดยไม่กิน context</strong></li>
+    </ul>
+
+    <h2><span class="h-ico">🧭</span> Skills ต่างจากฟีเจอร์อื่นอย่างไร</h2>
+    <div class="table-wrap">
+      <table class="ref">
+        <thead><tr><th>ฟีเจอร์</th><th>ลักษณะเด่น</th></tr></thead>
+        <tbody>
+          <tr><td><code>CLAUDE.md</code></td><td>โหลดทุกครั้ง (persistent)</td></tr>
+          <tr><td>Skills</td><td>โหลด on demand เมื่อ task ตรง</td></tr>
+          <tr><td>Subagents</td><td>ทำงานใน context แยก</td></tr>
+          <tr><td>Hooks</td><td>event-driven รันแน่นอน</td></tr>
+          <tr><td>MCP</td><td>เชื่อม external tools (คนละหมวด)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2><span class="h-ico">🤝</span> แชร์และแก้ปัญหา</h2>
+    <p><strong>แชร์:</strong> project skills แชร์ผ่าน Git ได้, ทำเป็น plugins/marketplaces, หรือใช้ enterprise managed settings (priority สูงสุด); ถ้าจะให้ subagent ใช้ skill ต้อง list skills ไว้ใน frontmatter ของ subagent</p>
+    <p><strong>Troubleshooting:</strong> ใช้ skills validator ช่วยตรวจ — ถ้า skill <strong>ไม่ trigger</strong> ให้แก้ description, ถ้า <strong>ไม่โหลด</strong> มักเพราะ SKILL.md ผิดโครงสร้าง, ถ้า <strong>ใช้ผิดตัว</strong> มักเพราะ description คล้ายกันเกินไป</p>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>Skill = โฟลเดอร์ + SKILL.md (name/description จำเป็น) โหลด on demand ผ่าน semantic matching</li>
+        <li>Progressive disclosure: SKILL.md สั้น (&lt;500 บรรทัด) + link ไฟล์; scripts รันโดยไม่กิน context</li>
+        <li>priority เมื่อชื่อซ้ำ: Enterprise → Personal → Project → Plugins</li>
+        <li>ต่างจาก CLAUDE.md (โหลดทุกครั้ง), Subagents (context แยก), Hooks (event), MCP (external)</li>
+        <li>แชร์ผ่าน Git/plugins/managed settings; แก้ปัญหา trigger ที่ description เป็นหลัก</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "Claude เลือกว่าจะใช้ skill ไหนด้วยวิธีใด?",
+        opts: ["สุ่ม", "semantic matching จากชื่อ/คำอธิบายที่โหลดไว้ตอนเริ่ม", "เรียงตามตัวอักษร", "ถามผู้ใช้ทุกครั้ง"],
+        answer: 1, explain: "ตอนเริ่มจะโหลดแค่ชื่อ/description แล้ว match ด้วย semantic matching ก่อนโหลดเนื้อหาเต็ม" },
+      { q: "ไฟล์ใดเป็นหัวใจของ skill และต้องมี name/description?",
+        opts: ["CLAUDE.md", "SKILL.md", "settings.json", "package.json"],
+        answer: 1, explain: "SKILL.md มี frontmatter ที่ต้องระบุ name และ description เป็นอย่างน้อย" },
+      { q: "Progressive disclosure แนะนำให้ทำอะไร?",
+        opts: ["ใส่ทุกอย่างใน SKILL.md", "ทำ SKILL.md ให้สั้น (<500 บรรทัด) แล้ว link ไปไฟล์อื่น; scripts รันโดยไม่กิน context", "ห้ามใช้ scripts", "โหลดทุก skill พร้อมกัน"],
+        answer: 1, explain: "เก็บ SKILL.md กระชับแล้วแยกรายละเอียดไปไฟล์อื่น ส่วน scripts รันได้โดยไม่กิน context" },
+      { q: "ลำดับ priority เมื่อ skill ชื่อซ้ำกันคือ?",
+        opts: ["Project → Personal → Enterprise", "Enterprise → Personal → Project → Plugins", "Plugins → Project", "ตามเวลาแก้ล่าสุด"],
+        answer: 1, explain: "ลำดับความสำคัญคือ Enterprise → Personal → Project → Plugins" },
+      { q: "ถ้า skill ‘ไม่ trigger’ ควรแก้ที่ใดก่อน?",
+        opts: ["ลบโฟลเดอร์", "ปรับ description ให้ชัด/ตรงกับงาน", "เปลี่ยนโมเดล", "เพิ่มจำนวนไฟล์"],
+        answer: 1, explain: "การไม่ trigger มักแก้ได้ด้วยการปรับ description ให้ชัดเจนและตรงกับงาน" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

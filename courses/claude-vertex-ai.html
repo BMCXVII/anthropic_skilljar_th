@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude with Google Vertex AI — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Claude with Google Cloud's Vertex AI: เทียบเท่าคอร์ส API/Bedrock ผ่าน Vertex AI — เพิ่ม Vertex AI Setup; RAG มี reranking + contextual retrieval">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="claude-vertex-ai" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Cloud Platforms</span> › <span>Claude with Google Vertex AI</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">☁️ Cloud Platforms · คอร์ส 12</span>
+      <h1>Claude with Google Cloud's Vertex AI</h1>
+      <p class="lead">เนื้อหาเทียบเท่าคอร์ส API/Bedrock แต่เรียก Claude ผ่าน <b>Google Vertex AI</b> — เพิ่มขั้นตอน <b>Vertex AI Setup</b> และ RAG ที่มี reranking + contextual retrieval</p>
+      <div class="meta-row">
+        <span>⏱️ ~80 บท · ระดับสูง (engineer)</span>
+        <span>🎥 วิดีโอเล่นบนแพลตฟอร์ม (ต้อง login)</span>
+        <span>📌 สถานะ: ลงทะเบียนแล้ว</span>
+      </div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">ℹ️</div><div class="c-body"><strong>โครงสร้างเหมือนคอร์ส API/Bedrock</strong> เนื้อหาหลักเหมือนกัน (API basics, prompt engineering/eval, tool use, RAG พร้อม reranking + contextual retrieval, features, MCP, agents) เพียงเปลี่ยน endpoint เป็น Vertex AI — ด้านล่างเน้น <strong>เฉพาะส่วนที่ต่าง</strong> ดูเนื้อหาหลักได้ที่ <a class="link" href="claude-api.html">Building with the Claude API</a></div></div>
+
+    <h2><span class="h-ico">🔵</span> Vertex AI Setup</h2>
+    <p>สิ่งที่ต่างชัดที่สุดของคอร์สนี้คือขั้นตอน <strong>เปิดใช้ Anthropic models ใน Vertex</strong> — ตั้งค่าผ่าน <code>console.cloud.google.com/vertex-ai/dashboard</code> ให้เรียบร้อยก่อน จึงจะเรียก Claude ผ่าน Vertex ได้</p>
+
+    <h2><span class="h-ico">📡</span> Making a request ผ่าน Vertex AI</h2>
+    <p>เมื่อตั้งค่าเสร็จ การยิง request ไปยัง Claude ก็ทำผ่าน Vertex AI แทน endpoint ของ Anthropic โดยตรง</p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/vertex-request-1.png" alt="request ผ่าน Vertex AI" loading="lazy"><figcaption>การยิง request ไป Claude ผ่าน Vertex AI</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/vertex-request-2.png" alt="โครงสร้าง request/response" loading="lazy"><figcaption>โครงสร้าง request/response</figcaption></figure>
+    </div>
+    <div class="platform-video">
+      <div class="pv-ico">▶</div>
+      <div class="pv-body"><strong>วิดีโอบทเรียน: Making a request</strong><span>วิดีโอเล่นบนแพลตฟอร์ม Anthropic Academy</span></div>
+      <a class="pv-btn" href="https://anthropic.skilljar.com/claude-with-google-vertex/289155" target="_blank" rel="noopener">ดูในเว็บ (ต้อง login) ↗</a>
+    </div>
+
+    <h2><span class="h-ico">🔎</span> RAG: เหมือน Bedrock</h2>
+    <p>เช่นเดียวกับคอร์ส Bedrock ส่วน RAG ของ Vertex มีทั้ง <strong>reranking</strong> (จัดอันดับผลใหม่ให้ตรงขึ้น) และ <strong>contextual retrieval</strong> (เติม context ในแต่ละ chunk ก่อนเก็บเพื่อความแม่นยำ)</p>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>เนื้อหาหลักเหมือนคอร์ส API/Bedrock แต่เรียก Claude ผ่าน Google Vertex AI</li>
+        <li>จุดต่างหลักคือต้องทำ Vertex AI Setup (เปิดใช้ Anthropic models) ก่อน</li>
+        <li>ยิง request ไป Claude ผ่าน Vertex AI แทน endpoint ตรงของ Anthropic</li>
+        <li>RAG มี reranking + contextual retrieval เช่นเดียวกับ Bedrock</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "จุดต่างหลักของคอร์ส Vertex AI เทียบกับคอร์ส API คือ?",
+        opts: ["เนื้อหาคนละเรื่อง", "ต้องทำ Vertex AI Setup (เปิดใช้ Anthropic models) ก่อนเรียก Claude", "ไม่มี tool use", "ไม่มี RAG"],
+        answer: 1, explain: "จุดต่างเด่นคือขั้นตอน Vertex AI Setup ก่อนจึงจะเรียก Claude ผ่าน Vertex ได้" },
+      { q: "ตั้งค่าเปิดใช้ Anthropic models ใน Vertex ทำที่ไหน?",
+        opts: ["console.anthropic.com", "console.cloud.google.com/vertex-ai/dashboard", "github.com", "aws.amazon.com"],
+        answer: 1, explain: "ตั้งค่าผ่าน console.cloud.google.com/vertex-ai/dashboard" },
+      { q: "ส่วน RAG ของคอร์ส Vertex มีอะไรเหมือน Bedrock?",
+        opts: ["ไม่มี RAG", "reranking + contextual retrieval", "เฉพาะ BM25", "เฉพาะ embeddings"],
+        answer: 1, explain: "RAG ของ Vertex มีทั้ง reranking และ contextual retrieval เช่นเดียวกับ Bedrock" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

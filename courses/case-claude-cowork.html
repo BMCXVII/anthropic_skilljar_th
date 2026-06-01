@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Claude Cowork — งานเอกสารหลายขั้นจบในที่เดียว — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: ใช้ Claude Cowork รวมข้อมูลจากหลายไฟล์/แอปแล้วทำรายงานสรุปเป็น artifact ทีละขั้น">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-claude-cowork" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>Claude Cowork</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 20</span>
+      <h1>Case Study: Claude Cowork<br>รวมข้อมูลหลายไฟล์ → รายงานสรุปในครั้งเดียว</h1>
+      <p class="lead">โจทย์: มีไฟล์ยอดขายหลายเดือนกระจัดกระจาย อยากได้ <b>รายงานสรุปรายไตรมาส</b> พร้อมไฮไลต์ — ให้ Cowork ทำงานหลายขั้นบนไฟล์จริงจนได้ผลเป็น artifact</p>
+      <div class="meta-row"><span>🎯 ใช้กับ Claude Desktop (Cowork)</span><span>🧩 อิงคอร์ส <a class="link" href="claude-cowork.html">Introduction to Claude Cowork</a></span><span>📋 step-by-step</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> งานนี้เหมาะกับ Cowork เพราะเป็นงาน <strong>หลายขั้นตอน + อิงไฟล์จริง</strong> — Cowork จะวางแผน ลงมือ และส่งมอบเป็นไฟล์ให้รีวิวเหมือนรับงานจากเพื่อนร่วมงาน</div></div>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">เตรียมโฟลเดอร์ทำงานเฉพาะ</h3>
+      <p><strong>ทำไม:</strong> แนวปฏิบัติด้านความปลอดภัยคือใช้ <strong>โฟลเดอร์ทำงานเฉพาะ</strong> (ไม่ใช่ Documents/Downloads/Desktop ตรง ๆ) เพื่อจำกัดขอบเขตไฟล์ที่ Cowork เข้าถึง</p>
+      <pre><code><span class="cmt"># รวมไฟล์ที่เกี่ยวข้องไว้โฟลเดอร์เดียว เช่น</span>
+/work/q-report/
+  ├── sales-jan.csv
+  ├── sales-feb.csv
+  └── sales-mar.csv</code></pre>
+      <p>ใน Claude Desktop เลือกโหมด Cowork → <strong>"Work in a project"</strong> แล้วชี้ไปที่โฟลเดอร์นี้</p>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">มอบงานแล้วให้ Cowork ถาม clarify</h3>
+      <p>สั่งงานเป็นเป้าหมายระดับงาน Cowork จะ <strong>ถามคำถามก่อนเริ่ม</strong> ถ้าโจทย์ยังกำกวม — ตอบให้ชัดแล้วมันจะวางแผนเอง</p>
+      <pre><code><span class="str">"รวมไฟล์ยอดขาย 3 เดือนในโฟลเดอร์นี้ ทำรายงานสรุปไตรมาส:
+ยอดรวม, การเติบโตเทียบเดือนก่อน, สินค้าขายดี 5 อันดับ
+และไฮไลต์ความผิดปกติ — ส่งเป็นเอกสารสรุปให้ฉันรีวิว"</span></code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">ดู Cowork ลงมือ + steer กลางทางได้</h3>
+      <p>Cowork จะอ่านไฟล์ คำนวณ และเริ่มร่างเอกสาร ระหว่างทางถ้าทิศไม่ตรง <strong>พิมพ์แทรกเพื่อปรับได้ทันที</strong></p>
+      <pre><code><span class="str">"ขอกราฟแท่งเปรียบเทียบยอดรายเดือนด้วย และจัดหัวข้อตามภูมิภาค"</span></code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">รับ deliverable (artifact) มารีวิว</h3>
+      <p>ผลลัพธ์ออกมาเป็น <strong>ไฟล์ (artifact)</strong> ตรวจเหมือนรับงานจากเพื่อนร่วมงาน — ถ้าจะให้ส่งออก/แชร์ Cowork จะ <strong>ถามก่อนเสมอ</strong></p>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">ได้รายงานไตรมาสพร้อมกราฟและไฮไลต์ — จากไฟล์ดิบหลายไฟล์ จบในเซสชันเดียว</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <h3 id="s5">ทำให้เร็วขึ้นรอบหน้า (ออปชัน)</h3>
+      <p>ถ้าทำรายงานแบบนี้ประจำ ให้บันทึกเป็น <strong>Skill</strong> (playbook) หรือใช้ <strong>global instructions</strong> เพื่อไม่ต้องอธิบายรูปแบบใหม่ทุกครั้ง และตั้ง <code>/schedule</code> ให้ทำตามรอบได้</p>
+    </div></div>
+
+    <h2><span class="h-ico">📋</span> Prompt สรุป — คัดลอกไปใช้ได้เลย</h2>
+    <div class="prompt-box">
+      <div class="pb-head"><span>🤝</span> Master Prompt — งานเอกสารหลายขั้นใน Cowork</div>
+      <pre><code>ทำงานในโฟลเดอร์โปรเจกต์นี้ (มีไฟล์ข้อมูลดิบหลายไฟล์)
+
+เป้าหมาย: รวมข้อมูลทั้งหมดเป็นรายงานสรุป 1 ไฟล์ ที่มี
+- ตัวเลขรวม + การเปลี่ยนแปลงเทียบช่วงก่อน
+- 5 อันดับเด่น + ไฮไลต์ความผิดปกติ
+- กราฟประกอบ
+
+ถ้ามีอะไรกำกวมให้ถามก่อน แล้ววางแผน-ลงมือ-ส่งเป็นเอกสารให้ฉันรีวิว
+อย่าส่งออก/แชร์ให้ใครจนกว่าฉันจะอนุมัติ</code></pre>
+    </div>
+
+    <div class="takeaways">
+      <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
+      <ul>
+        <li>เลือกงานที่เหมาะกับ Cowork: หลายขั้นตอน + อิงไฟล์จริง</li>
+        <li>ใช้โฟลเดอร์ทำงานเฉพาะ และอาศัยที่ Cowork ถามก่อน send/share</li>
+        <li>มอบเป้าหมาย ปล่อยให้ clarify + วางแผน แล้ว steer กลางทางได้</li>
+        <li>ทำซ้ำเร็วขึ้นด้วย Skill / global instructions / <code>/schedule</code></li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

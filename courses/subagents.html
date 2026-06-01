@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction to Subagents — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Introduction to Subagents: ผู้ช่วยเฉพาะทางที่รันใน context แยกแล้วส่งสรุปกลับ, สร้างด้วย /agents, หลักออกแบบ 4 ข้อ และเมื่อใดควรใช้">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="subagents" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Claude Code &amp; Cowork</span> › <span>Introduction to Subagents</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">💻 Claude Code &amp; Cowork · คอร์ส 07</span>
+      <h1>Introduction to Subagents</h1>
+      <p class="lead">Subagent คือ <b>ผู้ช่วยเฉพาะทาง</b> ที่คุณ delegate งานให้ มันรันใน <b>context window แยก</b> แล้วส่งเฉพาะสรุปกลับมายัง main thread</p>
+      <div class="meta-row">
+        <span>⏱️ 4 บท · เริ่มต้น–กลาง</span>
+        <span>🎯 ใช้กับ Claude Code</span>
+        <span>📌 สถานะ: ลงทะเบียนแล้ว</span>
+      </div>
+    </header>
+
+    <p class="section-intro">คอร์สสั้นกระชับ เรียบเรียงตามลำดับบทเรียนจริง: subagent คืออะไร → สร้างอย่างไร → ออกแบบให้ดี → ใช้ตอนไหนถึงคุ้ม</p>
+
+    <h2><span class="h-ico">🧩</span> Subagent คืออะไร</h2>
+    <p>มองว่าเป็นผู้ช่วยที่คุณส่งงานให้แล้วมันไปทำใน <strong>context ของตัวเอง</strong> ขั้นตอนกลาง ๆ ระหว่างทาง <strong>จะไม่มารกใน main thread</strong> — สุดท้ายมันส่งกลับมาแค่ <strong>สรุปผล</strong> แต่ละ subagent รับ custom system prompt + task description ของตัวเอง จึงทำงานเฉพาะทางได้ดี</p>
+
+    <h2><span class="h-ico">🛠️</span> สร้าง subagent</h2>
+    <p>มีทั้งแบบ built-in และสร้างเอง โดยนิยามเป็นไฟล์ <strong>markdown + YAML frontmatter</strong> วิธีสร้างผ่านเมนู: <code>/agents</code> → Create new agent → เลือก scope (Project/User) → ให้ Claude ช่วย generate config ให้</p>
+
+    <h2><span class="h-ico">🎯</span> ออกแบบให้ดี — 4 ข้อ</h2>
+    <div class="grid cols-2">
+      <div class="tile"><div class="t-ico">📝</div><h4>1. Description ที่ดี</h4><p>ช่วยทั้งให้ Claude เลือก subagent ถูกตัว และช่วยเขียน input prompt ที่ตรง</p></div>
+      <div class="tile"><div class="t-ico">📤</div><h4>2. Output format</h4><p>กำหนดรูปแบบผลลัพธ์ที่อยากได้กลับมาให้ชัด</p></div>
+      <div class="tile"><div class="t-ico">🚧</div><h4>3. รายงานอุปสรรค</h4><p>ให้ subagent บอกเมื่อเจอปัญหา ไม่ใช่เงียบหรือเดา</p></div>
+      <div class="tile"><div class="t-ico">🔒</div><h4>4. จำกัด tool access</h4><p>ให้สิทธิ์เครื่องมือเท่าที่จำเป็นกับงานนั้น</p></div>
+    </div>
+
+    <h2><span class="h-ico">💡</span> ใช้ตอนไหนถึงคุ้ม</h2>
+    <p>ใช้เมื่อ <strong>exploration แยกออกจาก execution</strong> ได้ชัด — คือคุณต้องการแค่ "ผลลัพธ์" ไม่ใช่ทุกขั้นตอนระหว่างทาง เหมาะมากเมื่ออยาก <strong>กันไม่ให้ main context รก</strong> หรืออยากได้ <strong>มุมมองใหม่ที่สดและไม่มี bias</strong> (เช่น งาน research หรือ code review)</p>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>Subagent รันใน context window แยก แล้วส่งเฉพาะสรุปกลับ main thread</li>
+        <li>สร้างเป็น markdown + YAML frontmatter ผ่าน <code>/agents</code> (เลือก scope Project/User)</li>
+        <li>ออกแบบให้ดี 4 ข้อ: description ดี, output format, รายงานอุปสรรค, จำกัด tool access</li>
+        <li>ใช้เมื่อแยก exploration ออกจาก execution — ต้องการผลลัพธ์ ไม่ใช่ทุกขั้นตอน และกัน context รก</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "ลักษณะเด่นของ subagent คืออะไร?",
+        opts: ["รันใน context เดียวกับ main", "รันใน context window แยกแล้วส่งเฉพาะสรุปกลับ", "แก้ไฟล์อัตโนมัติเสมอ", "ทำงานบนมือถือ"],
+        answer: 1, explain: "subagent ทำงานใน context ของตัวเอง ขั้นตอนกลางไม่รก main thread แล้วส่งสรุปกลับ" },
+      { q: "สร้าง subagent ผ่านคำสั่งใด?",
+        opts: ["/init", "/agents", "/compact", "/review"],
+        answer: 1, explain: "ใช้ /agents → Create new agent → เลือก scope แล้วให้ Claude generate config" },
+      { q: "ข้อใดไม่ใช่หนึ่งใน 4 หลักการออกแบบ subagent?",
+        opts: ["description ที่ดี", "กำหนด output format", "ตั้งราคา API", "จำกัด tool access"],
+        answer: 2, explain: "4 ข้อคือ description ดี, output format, รายงานอุปสรรค และจำกัด tool access" },
+      { q: "เมื่อใดที่การใช้ subagent คุ้มที่สุด?",
+        opts: ["ทุกงานเล็ก ๆ", "เมื่อ exploration แยกจาก execution — ต้องการผลลัพธ์ ไม่ใช่ทุกขั้นตอน และกัน context รก", "เมื่ออยากให้ตอบเร็วขึ้นเท่านั้น", "เมื่อไม่มี CLAUDE.md"],
+        answer: 1, explain: "เหมาะเมื่อแยกการสำรวจออกจากการลงมือ อยากได้แค่ผลลัพธ์/มุมมองใหม่ และไม่ให้ main context รก" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

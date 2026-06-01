@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude 101 — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Claude 101: ใช้ Claude เป็น thinking partner ในงานประจำวัน — Constitutional AI, Projects, Artifacts, Skills, Connectors, Research mode และโหมด Chat/Cowork/Code">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="claude-101" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>เริ่มต้นกับ Claude</span> › <span>Claude 101</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🚀 เริ่มต้นกับ Claude · คอร์ส 01</span>
+      <h1>Claude 101</h1>
+      <p class="lead">รู้จัก Claude และใช้มันเป็น <b>thinking partner</b> ในงานประจำวัน — ตั้งแต่การคุยให้ได้ผลดี ไปจนถึงจัดระเบียบงานด้วย Projects/Artifacts/Skills และต่อ Claude เข้ากับเครื่องมือที่ใช้จริง</p>
+      <div class="meta-row">
+        <span>⏱️ 14 บท · ระดับเริ่มต้น</span>
+        <span>🎯 ใช้ได้ทั้ง web / desktop / mobile</span>
+        <span>✅ สถานะ: เรียนจบแล้ว</span>
+      </div>
+    </header>
+
+    <p class="section-intro">คอร์สนี้ไล่จาก "Claude คืออะไรและคุยอย่างไรให้ได้ผล" → จัดระเบียบงานและความรู้ → ต่อ Claude เข้ากับเครื่องมือและค้นข้อมูลเชิงลึก → จนถึงการเอาไปใช้จริงตามบทบาทงาน เรียบเรียงตามลำดับบทเรียนจริงด้านล่าง</p>
+
+    <h2><span class="h-ico">👋</span> รู้จัก Claude และการคุยครั้งแรก</h2>
+    <p><strong>Claude</strong> คือ AI assistant ที่ออกแบบให้เป็น thinking partner ยึดหลัก <strong>helpful / harmless / honest</strong> ผ่านแนวทาง <strong>Constitutional AI</strong> ทำได้หลายงาน ทั้งสรุป ค้นหา เขียน ตอบคำถาม และเขียนโค้ด เข้าถึงได้ทั้งบนเว็บ เดสก์ท็อป และมือถือ</p>
+    <p>เคล็ดลับการคุยครั้งแรก: คุยกับมันเหมือน <strong>เพื่อนร่วมงาน</strong> โดยจัดบริบทให้ครบ — <em>setting the stage</em> (ภูมิหลัง), <em>define the task</em> (งานที่อยากได้), และ <em>specify rules</em> (ข้อกำหนด/รูปแบบ) การอัปโหลดเอกสารช่วยให้ Claude เข้าใจงานได้ดีขึ้น และพลังจริง ๆ มาจาก <strong>การคุยต่อเนื่อง</strong> ปรับไปทีละรอบ ไม่ใช่สั่งครั้งเดียวจบ</p>
+
+    <h3>Getting better results</h3>
+    <p>บทนี้รวมวิธีแก้ปัญหาที่มือใหม่เจอบ่อย แนะนำให้ศึกษาแนวคิด <strong>AI Fluency</strong> ควบคู่ และตั้ง <strong>evals</strong> (ชุดทดสอบเล็ก ๆ) เพื่อดูว่า Claude ทำงานเข้ากับ workflow ของเราได้ดีแค่ไหน</p>
+    <div class="video-embed yt-facade" data-yt="Zzn-g8lvLMA" data-title="Getting better results"></div>
+    <p class="video-meta">▶ วิดีโอ: แก้ปัญหาที่พบบ่อย + แนะนำ evals</p>
+
+    <h3>โหมด Chat, Cowork, Code บนเดสก์ท็อป</h3>
+    <p>แอป Claude บนเดสก์ท็อปมี 3 โหมดให้เลือกตามงาน: <strong>Chat</strong> (ถาม/ร่างงานเร็ว ๆ), <strong>Cowork</strong> (งานหลายขั้นตอนบนไฟล์จริง), และ <strong>Code</strong> (งานพัฒนา) พร้อมลูกเล่นอย่าง quick entry และ scheduled tasks</p>
+
+    <h2><span class="h-ico">🗂️</span> จัดระเบียบงานและความรู้</h2>
+    <div class="grid cols-3">
+      <div class="tile"><div class="t-ico">📁</div><h4>Projects</h4><p>workspace ที่มี memory/knowledge/instructions อัปโหลดเอกสารไว้ให้อ้างอิงได้ทุกแชท เมื่อ knowledge ใหญ่ขึ้นจะเปิด RAG อัตโนมัติ (อ้างอิงได้กว้างขึ้นมาก) และแชร์ให้ทีมได้</p></div>
+      <div class="tile"><div class="t-ico">🎨</div><h4>Artifacts</h4><p>ผลลัพธ์ที่เป็นชิ้นงาน standalone และโต้ตอบได้ (เว็บ/chart/เอกสาร) เปิดในหน้าต่างแยก สร้างอัตโนมัติเมื่อเนื้อหายาวพอ และแชร์/เผยแพร่ได้</p></div>
+      <div class="tile"><div class="t-ico">📦</div><h4>Skills</h4><p>โฟลเดอร์รวม instructions/scripts/resources ที่ Claude โหลดมาใช้แบบ dynamic มี built-in skills สำหรับสร้างเอกสาร เปิดใช้ได้ใน settings</p></div>
+    </div>
+    <div class="video-embed yt-facade" data-yt="LpGpwhORWr0" data-title="Working with skills"></div>
+    <p class="video-meta">▶ วิดีโอ: Skills ในผลิตภัณฑ์ Claude</p>
+
+    <h2><span class="h-ico">🔗</span> ต่อ Claude เข้ากับเครื่องมือและค้นข้อมูลเชิงลึก</h2>
+    <p><strong>Connectors</strong> ให้ Claude เข้าถึงเครื่องมือ/ข้อมูลที่คุณใช้ทุกวัน — ไม่ใช่แค่อ่านข้อมูล แต่ทำ action ได้ด้วย (ค้น ดึง วิเคราะห์ สร้าง อัปเดต) ตามสิทธิ์ที่ให้ ส่วน <strong>Enterprise search</strong> ค้นข้ามแหล่งข้อมูลขององค์กรโดยมี security/permissions ปกป้องข้อมูล (สำหรับ Team/Enterprise ที่ admin เปิดใช้)</p>
+    <p><strong>Research mode</strong> ทำงานแบบ agentic — ค้นหลายรอบต่อเนื่อง สำรวจหลายมุมโดยอัตโนมัติ แล้วสรุปเป็นรายงาน ใช้เวลาราว 5–15 นาที (งานซับซ้อนถึง ~45 นาที)</p>
+
+    <h2><span class="h-ico">🎯</span> เอาไปใช้จริง</h2>
+    <p>คอร์สปิดท้ายด้วยตัวอย่าง use-case ตามบทบาทงาน (พร้อมไกด์ละเอียดให้ลองทันที) และแนะนำผลิตภัณฑ์เฉพาะทางอื่น ๆ ในตระกูล Claude เช่น Claude Code และ Claude สำหรับ Slack/Excel/PowerPoint/Chrome</p>
+    <div class="video-embed yt-facade" data-yt="s-avRazvmLg" data-title="Other ways to work with Claude"></div>
+    <p class="video-meta">▶ วิดีโอ: Claude Code / Slack / Excel / PowerPoint / Chrome</p>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>Claude เป็น thinking partner ที่ยึดหลัก helpful/harmless/honest ผ่าน Constitutional AI</li>
+        <li>คุยให้ได้ผล = ให้บริบทครบ (เวที + งาน + กฎ) และปรับต่อเนื่องทีละรอบ</li>
+        <li>จัดระเบียบงานด้วย Projects (มี RAG อัตโนมัติเมื่อความรู้ใหญ่ขึ้น), Artifacts และ Skills</li>
+        <li>ขยายขอบเขตด้วย Connectors, Enterprise search และ Research mode (agentic)</li>
+        <li>เลือกโหมด Chat / Cowork / Code ให้ตรงกับลักษณะงาน</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "แนวทางที่ใช้ฝึก Claude ให้ helpful/harmless/honest เรียกว่าอะไร?",
+        opts: ["Reinforcement only", "Constitutional AI", "Prompt caching", "RAG"],
+        answer: 1, explain: "Claude ออกแบบด้วยหลัก Constitutional AI เพื่อให้เป็นผู้ช่วยที่ helpful, harmless และ honest" },
+      { q: "เมื่อ knowledge ใน Projects ใหญ่ขึ้น Claude จะทำอะไรโดยอัตโนมัติ?",
+        opts: ["ลบเอกสารเก่า", "เปิดใช้ RAG เพื่อค้น/อ้างอิงข้อมูลที่เกี่ยวข้อง", "หยุดทำงาน", "บีบอัดรูปภาพ"],
+        answer: 1, explain: "Projects จะเปิด RAG อัตโนมัติเมื่อ knowledge ใหญ่ขึ้น เพื่อดึงเฉพาะส่วนที่เกี่ยวข้องมาใช้" },
+      { q: "Artifacts คืออะไร?",
+        opts: ["ไฟล์ตั้งค่า", "ผลลัพธ์ standalone ที่โต้ตอบได้ เปิดในหน้าต่างแยกและแชร์ได้", "โหมดความปลอดภัย", "ชื่อโมเดล"],
+        answer: 1, explain: "Artifacts คือชิ้นงาน standalone interactive (เว็บ/chart/เอกสาร) ที่เปิดในหน้าต่างแยกและเผยแพร่ได้" },
+      { q: "Research mode ทำงานแบบใด?",
+        opts: ["ค้นครั้งเดียวแล้วตอบ", "agentic — ค้นหลายรอบ สำรวจหลายมุม แล้วสรุปเป็นรายงาน", "ค้นเฉพาะใน Projects", "ใช้แทน Connectors"],
+        answer: 1, explain: "Research mode ค้นต่อเนื่องหลายรอบโดยอัตโนมัติ แล้วสรุปเป็นรายงาน (ราว 5–15 นาที)" },
+      { q: "โหมดใดเหมาะกับงานหลายขั้นตอนบนไฟล์จริง?",
+        opts: ["Chat", "Cowork", "Code", "Research"],
+        answer: 1, explain: "Cowork ออกแบบมาสำหรับงาน multi-step บนไฟล์จริง ส่วน Chat ไว้ถาม/ร่าง และ Code ไว้พัฒนา" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP: Advanced Topics — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Model Context Protocol: Advanced Topics — Sampling, log/progress notifications, Roots, transports (STDIO/StreamableHTTP) และ state management">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="mcp-advanced" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>API &amp; MCP</span> › <span>MCP: Advanced Topics</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🔌 API &amp; MCP · คอร์ส 10</span>
+      <h1>Model Context Protocol: Advanced Topics</h1>
+      <p class="lead">MCP ขั้นสูงแบบ hands-on lab — <b>Sampling</b>, notifications, <b>Roots</b>, transports (STDIO/StreamableHTTP) และการจัดการ state ตอนนำ server ขึ้น production</p>
+      <div class="meta-row">
+        <span>⏱️ 15 บท · ระดับสูง (dev)</span>
+        <span>🎥 วิดีโอเล่นบนแพลตฟอร์ม (ต้อง login)</span>
+        <span>📌 สถานะ: ลงทะเบียนแล้ว</span>
+      </div>
+    </header>
+
+    <p class="section-intro">คอร์สนี้เป็น lab (client.py / server.py) ต่อยอดจาก Introduction to MCP — เรียบเรียงตามลำดับบทเรียนจริง แบ่งเป็น 2 ส่วนใหญ่: ความสามารถหลักของ MCP และเรื่อง transports/state</p>
+
+    <h2><span class="h-ico">⭐</span> ความสามารถหลักของ MCP</h2>
+
+    <h3>Sampling</h3>
+    <p>ปกติ client เป็นฝ่ายเรียก server แต่ <strong>Sampling กลับด้าน</strong> — server สามารถ <strong>ขอให้ client (ที่มี LLM อยู่) ช่วยสร้างข้อความ</strong> ให้ได้ ใน lab จะเรียก <code>ctx.session.create_message</code></p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/mcp-adv-sampling-1.png" alt="Sampling — server ขอ LLM ผ่าน client" loading="lazy"><figcaption>Sampling — server ขอให้ client (ที่มี LLM) สร้างข้อความ</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/mcp-adv-sampling-2.png" alt="Sampling flow" loading="lazy"><figcaption>Sampling flow (ขั้นตอน create_message ผ่าน client)</figcaption></figure>
+    </div>
+    <div class="platform-video">
+      <div class="pv-ico">▶</div>
+      <div class="pv-body"><strong>วิดีโอบทเรียน: Sampling</strong><span>วิดีโอเล่นบนแพลตฟอร์ม Anthropic Academy</span></div>
+      <a class="pv-btn" href="https://anthropic.skilljar.com/model-context-protocol-advanced-topics/296288" target="_blank" rel="noopener">ดูในเว็บ (ต้อง login) ↗</a>
+    </div>
+    <ul>
+      <li><strong>Log & progress notifications:</strong> ให้ tool function รับ <code>Context</code> เป็น argument เพื่อส่ง log/progress กลับ โดย client นิยาม callbacks ไว้รับ</li>
+      <li><strong>Roots:</strong> ให้ผู้ใช้กำหนดไฟล์/โฟลเดอร์ที่ server เข้าถึงได้ (รับ path ผ่าน CLI args) — คุมขอบเขตการเข้าถึง</li>
+    </ul>
+
+    <h2><span class="h-ico">🔀</span> Transports และการสื่อสาร</h2>
+    <p>MCP สื่อสารกันด้วย <strong>JSON message types</strong> และมี transport ให้เลือกตามสถานการณ์:</p>
+    <div class="grid cols-2">
+      <div class="tile"><div class="t-ico">🖥️</div><h4>STDIO transport</h4><p>ใช้เมื่อ client และ server อยู่ <strong>เครื่องเดียวกัน</strong></p></div>
+      <div class="tile"><div class="t-ico">🌐</div><h4>StreamableHTTP transport</h4><p>เชื่อม server <strong>ระยะไกล</strong> ผ่าน HTTP และแก้ปัญหาการส่งข้อมูลจาก server → client</p></div>
+    </div>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/mcp-adv-streamablehttp-1.png" alt="StreamableHTTP transport" loading="lazy"><figcaption>StreamableHTTP transport (เชื่อม server ระยะไกลผ่าน HTTP)</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/mcp-adv-streamablehttp-2.png" alt="กลไก StreamableHTTP" loading="lazy"><figcaption>กลไกการทำงานของ StreamableHTTP</figcaption></figure>
+    </div>
+    <div class="platform-video">
+      <div class="pv-ico">▶</div>
+      <div class="pv-body"><strong>วิดีโอบทเรียน: The StreamableHTTP transport</strong><span>วิดีโอเล่นบนแพลตฟอร์ม Anthropic Academy</span></div>
+      <a class="pv-btn" href="https://anthropic.skilljar.com/model-context-protocol-advanced-topics/296287" target="_blank" rel="noopener">ดูในเว็บ (ต้อง login) ↗</a>
+    </div>
+    <div class="callout info"><div class="c-ico">⚙️</div><div class="c-body"><strong>State และการ deploy</strong> ธง <code>stateless_http</code> และ <code>json_response</code> ใช้คุมพฤติกรรมของ server ตอน scale/deploy</div></div>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>Sampling = server ขอให้ client (ที่มี LLM) สร้างข้อความ ผ่าน <code>ctx.session.create_message</code></li>
+        <li>Notifications ส่ง log/progress ได้ผ่าน Context arg + callbacks ฝั่ง client</li>
+        <li>Roots ให้ผู้ใช้กำหนดไฟล์/โฟลเดอร์ที่ server เข้าถึงได้</li>
+        <li>STDIO = เครื่องเดียวกัน, StreamableHTTP = server ระยะไกลผ่าน HTTP</li>
+        <li>คุม state ตอน deploy ด้วยธง stateless_http / json_response</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "Sampling ใน MCP คืออะไร?",
+        opts: ["client สุ่มคำตอบ", "server ขอให้ client (ที่มี LLM) ช่วยสร้างข้อความให้", "การบีบอัดข้อมูล", "การ cache prompt"],
+        answer: 1, explain: "Sampling กลับด้านปกติ — server ร้องขอให้ client ซึ่งมี LLM สร้างข้อความผ่าน create_message" },
+      { q: "ควรใช้ STDIO transport เมื่อใด?",
+        opts: ["เมื่อ server อยู่ไกล", "เมื่อ client และ server อยู่เครื่องเดียวกัน", "เมื่อใช้ OAuth", "เมื่อมีหลายโมเดล"],
+        answer: 1, explain: "STDIO เหมาะเมื่อ client/server รันบนเครื่องเดียวกัน" },
+      { q: "StreamableHTTP transport ใช้ทำอะไร?",
+        opts: ["บีบอัดไฟล์", "เชื่อม server ระยะไกลผ่าน HTTP และแก้ปัญหาการส่งข้อมูล server→client", "ตั้งธีม", "สร้าง embeddings"],
+        answer: 1, explain: "StreamableHTTP ใช้เชื่อม server ระยะไกลผ่าน HTTP" },
+      { q: "Roots ใน MCP มีหน้าที่อะไร?",
+        opts: ["เก็บรหัสผ่าน", "ให้ผู้ใช้กำหนดไฟล์/โฟลเดอร์ที่ server เข้าถึงได้", "เพิ่มความเร็ว", "แปลภาษา"],
+        answer: 1, explain: "Roots กำหนดขอบเขตไฟล์/โฟลเดอร์ที่ server เข้าถึงได้ (รับ path ผ่าน CLI args)" },
+      { q: "ธงใดใช้คุมพฤติกรรม state ของ server ตอน deploy?",
+        opts: ["temperature / top_p", "stateless_http / json_response", "verbose / quiet", "GET / POST"],
+        answer: 1, explain: "stateless_http และ json_response ใช้คุมพฤติกรรม server ตอน scale/deploy" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

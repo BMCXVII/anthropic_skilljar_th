@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Capabilities &amp; Limitations — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส AI Capabilities and Limitations: เข้าใจโมเดลผ่าน 4 properties — Next Token Prediction, Knowledge, Working Memory, Steerability พร้อมโซน capability/limitation และการเชื่อมกับ 4D">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="ai-capabilities-limitations" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>เริ่มต้นกับ Claude</span> › <span>AI Capabilities &amp; Limitations</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🚀 เริ่มต้นกับ Claude · คอร์ส 02</span>
+      <h1>AI Capabilities &amp; Limitations</h1>
+      <p class="lead">เข้าใจว่าโมเดลทำงานอย่างไรผ่าน <b>4 properties</b> — แต่ละอย่างมีโซนที่ "เก่ง" และโซนที่ "พลาด" ชัดเจน ทำให้เรารู้ว่าเมื่อไหร่ควรเชื่อและเมื่อไหร่ต้องตรวจ</p>
+      <div class="meta-row">
+        <span>⏱️ 14 บท · เริ่มต้น–กลาง</span>
+        <span>🎯 เชื่อมโยงกับ 4D Framework</span>
+        <span>📌 สถานะ: ลงเรียนแล้ว · คืบหน้า ~28%</span>
+      </div>
+    </header>
+
+    <p class="section-intro">แนวคิดหลัก: แทนที่จะท่องจำว่า "AI ทำอะไรได้/ไม่ได้" ให้เข้าใจ 4 คุณสมบัติพื้นฐานของโมเดล แล้วจะเดาได้เองว่างานแบบไหนเสี่ยงพลาด — และเพราะ property เหล่านี้คงที่แม้โมเดลจะพัฒนาขึ้น ความเข้าใจนี้จึง durable</p>
+
+    <h2><span class="h-ico">🧭</span> เริ่มต้น: AI คืออะไรและได้นิสัยมาจากไหน</h2>
+    <p><strong>Generative AI</strong> คือ AI ที่สร้างเนื้อหาใหม่ ความเก่ง/อ่อนของมันวางตัวเป็น <strong>continuum (ไล่ระดับ)</strong> ตาม 4 แกน ไม่ใช่ "ได้/ไม่ได้" แบบขาวดำ เป้าหมายคือสร้าง <strong>calibrated trust</strong> — เชื่อให้พอดีกับความน่าเชื่อจริง โมเดลได้ "นิสัย" มาจาก <strong>pretraining</strong> (ฝึกเป็นตัวเติมเอกสาร) + <strong>fine-tuning</strong> (ปรับให้เป็นผู้ช่วย) ซึ่งทิ้งร่องรอยบางอย่างไว้ เช่น sycophancy (เออออตาม) หรือ verbosity (พูดยืดยาว)</p>
+    <div class="media-grid">
+      <div><div class="video-embed yt-facade" data-yt="Sj1yynxA9hw" data-title="Intro to AI Capabilities and Limitations"></div><p class="video-meta">▶ ภาพรวม 4 properties ของโมเดล</p></div>
+      <div><div class="video-embed yt-facade" data-yt="AiiiyYiEJa4" data-title="What We Mean by AI"></div><p class="video-meta">▶ Generative AI + 4 แกน continuum</p></div>
+      <div><div class="video-embed yt-facade" data-yt="6jRk3nC4-xI" data-title="How AI Gets Its Character"></div><p class="video-meta">▶ pretraining + fine-tuning</p></div>
+    </div>
+
+    <h2><span class="h-ico">🔢</span> Property 1 — Next Token Prediction</h2>
+    <p>โมเดลเขียนทีละคำตาม pattern ที่เรียนมา ผลข้างเคียงคือ <strong>fabrication (แต่งขึ้น)</strong> มักกระจุกที่ <strong>ชื่อ/วันที่/สถิติ/citation/URL</strong> — ยิ่งเป็นข้อมูลเฉพาะเจาะจง ยิ่งต้อง verify นี่คือรากฐานของ <strong>Discernment</strong></p>
+
+    <h2><span class="h-ico">📚</span> Property 2 — Knowledge</h2>
+    <p>ความรู้ของโมเดลถูก "แช่แข็ง" ไว้ที่ <strong>knowledge cutoff</strong> โซนที่เชื่อได้: เรื่องที่พบบ่อย/มีมานาน/สม่ำเสมอ; โซนที่ต้องระวัง: เรื่องหายาก/เกิดหลัง cutoff/ยังเป็นที่ถกเถียง</p>
+    <div class="video-embed yt-facade" data-yt="iSLdQXeKbHs" data-title="Knowledge"></div>
+    <p class="video-meta">▶ วิดีโอ: ความรู้ frozen ที่ knowledge cutoff</p>
+
+    <h2><span class="h-ico">🧠</span> Property 3 — Working Memory</h2>
+    <p><strong>context window</strong> มีขนาดจำกัด และเวลาพลาดมักเป็นแบบ <strong>"หน้าผา" (cliff)</strong> คือตัดข้อมูลเงียบ ๆ (silent truncation) โดยไม่เตือน บทเรียนสำคัญ: อย่าฝังข้อมูลสำคัญไว้กลางข้อความที่ยาวมาก</p>
+    <div class="video-embed yt-facade" data-yt="QJjt4wF4iHM" data-title="Working Memory"></div>
+    <p class="video-meta">▶ วิดีโอ: context window มีขีดจำกัด (cliff / silent truncation)</p>
+
+    <h2><span class="h-ico">🎛️</span> Property 4 — Steerability</h2>
+    <p>โมเดลทำตามคำสั่งผ่านกลไก Next Token Prediction เช่นกัน โซนที่ทำได้ดี: คำสั่ง <strong>สั้น/รูปธรรม/ตรวจสอบได้</strong>; จุดที่พลาด: <strong>reasoning drift</strong> (ค่อย ๆ ออกนอกลู่) และ <strong>letter-over-spirit</strong> (ทำตามตัวอักษรแต่ผิดเจตนา)</p>
+    <div class="video-embed yt-facade" data-yt="M_RwSRmp220" data-title="Steerability"></div>
+    <p class="video-meta">▶ วิดีโอ: ทำตามคำสั่งผ่าน Next Token Prediction</p>
+
+    <h2><span class="h-ico">⚡</span> เมื่อ properties ชนกัน</h2>
+    <p>ความผิดพลาดจริง ๆ มักไม่ได้มาจาก property เดียว แต่มาจาก <strong>2 อย่างขัดกัน</strong> เช่น Next Token Prediction + Knowledge → hallucination, หรือ Working Memory + Steerability → drift ออกนอกคำสั่ง</p>
+    <div class="media-grid">
+      <div><div class="video-embed yt-facade" data-yt="SPkg5WRfnEE" data-title="When Properties Collide"></div><p class="video-meta">▶ failure จาก 2 properties โต้กัน</p></div>
+      <div><div class="video-embed yt-facade" data-yt="F7ciHDKAlCA" data-title="Next Steps"></div><p class="video-meta">▶ สรุป mental model + เชื่อม 4D</p></div>
+    </div>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>เข้าใจโมเดลผ่าน 4 properties: Next Token Prediction, Knowledge, Working Memory, Steerability</li>
+        <li>แต่ละ property เป็น continuum — มีโซน capability และ limitation ชัดเจน</li>
+        <li>Fabrication กระจุกที่ชื่อ/วันที่/สถิติ/citation/URL → ต้อง verify (รากฐานของ Discernment)</li>
+        <li>ความรู้ frozen ที่ cutoff; context window พลาดแบบ cliff (silent truncation)</li>
+        <li>failure จริงมักเกิดจาก 2 properties ชนกัน — mental model นี้เชื่อมตรงกับ 4D</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "4 properties ที่คอร์สใช้ทำความเข้าใจโมเดลคืออะไร?",
+        opts: ["Speed, Cost, Size, Accuracy", "Next Token Prediction, Knowledge, Working Memory, Steerability", "Chat, Code, Cowork, Research", "Tools, RAG, MCP, Hooks"],
+        answer: 1, explain: "คอร์สอธิบายโมเดลผ่าน Next Token Prediction, Knowledge, Working Memory และ Steerability" },
+      { q: "Fabrication (การแต่งข้อมูล) มักกระจุกอยู่ที่ข้อมูลประเภทใด?",
+        opts: ["คำทักทาย", "ชื่อ/วันที่/สถิติ/citation/URL", "อิโมจิ", "หัวข้อทั่วไป"],
+        answer: 1, explain: "ยิ่งข้อมูลเฉพาะเจาะจง (ชื่อ วันที่ สถิติ citation URL) ยิ่งเสี่ยงถูกแต่งและต้อง verify" },
+      { q: "ความผิดพลาดของ Working Memory มักเป็นแบบใด?",
+        opts: ["ค่อย ๆ แย่ลง", "แบบ ‘หน้าผา’ (cliff) — ตัดข้อมูลเงียบ ๆ (silent truncation)", "เตือนก่อนเสมอ", "ไม่มีผลกระทบ"],
+        answer: 1, explain: "context window พลาดแบบ cliff คือ truncate เงียบ ๆ จึงไม่ควรฝังข้อมูลสำคัญกลางข้อความยาว" },
+      { q: "‘letter-over-spirit’ ในเรื่อง Steerability หมายถึง?",
+        opts: ["ทำเร็วเกินไป", "ทำตามตัวอักษรของคำสั่งแต่ผิดเจตนา", "ไม่ทำตามคำสั่งเลย", "ตอบยาวเกิน"],
+        answer: 1, explain: "letter-over-spirit คือทำตามถ้อยคำตรงตัวแต่หลุดจากเจตนาที่แท้จริง" },
+      { q: "ความผิดพลาดจริงของโมเดลมักเกิดจากอะไร?",
+        opts: ["property เดียวเสมอ", "2 properties ขัดกัน เช่น NTP+Knowledge → hallucination", "ฮาร์ดแวร์", "อินเทอร์เน็ตช้า"],
+        answer: 1, explain: "failure จริงมักเกิดจากจุดตัดของ 2 properties เช่น Next Token Prediction + Knowledge" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

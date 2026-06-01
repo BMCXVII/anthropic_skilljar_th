@@ -1,0 +1,12 @@
+# Claude Code working / source files (ไม่ใช่ส่วนของเว็บไซต์)
+PROMPT_for_claude_code.md
+01_courses_overview.json
+02_courses_detail.json
+03_assets_placement.json
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

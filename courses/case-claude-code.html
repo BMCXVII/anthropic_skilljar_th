@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Claude Code — เพิ่มฟีเจอร์จริง step by step — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: ใช้ Claude Code เพิ่มฟีเจอร์ dark mode toggle ด้วย workflow Explore → Plan → Code → Commit ทีละขั้น">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-claude-code" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>Claude Code</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 19</span>
+      <h1>Case Study: Claude Code<br>เพิ่มฟีเจอร์จริงด้วย Explore → Plan → Code → Commit</h1>
+      <p class="lead">โจทย์: เว็บแอปของเรายังไม่มี <b>dark mode</b> เราจะให้ Claude Code เพิ่มปุ่มสลับธีมให้ — ทำตามทีละขั้นแบบที่ใช้กับงานจริงได้เลย</p>
+      <div class="meta-row"><span>🎯 ใช้กับ Claude Code</span><span>🧩 อิงคอร์ส <a class="link" href="claude-code-101.html">Claude Code 101</a></span><span>📋 step-by-step</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> คุณมีโปรเจกต์เว็บอยู่แล้วในเครื่อง อยากเพิ่มปุ่ม dark/light toggle ที่จำค่าไว้ได้ — แต่ไม่อยากให้ Claude แก้มั่วทั้งโปรเจกต์ จึงใช้ workflow ที่แยก "วางแผน" ออกจาก "ลงมือ"</div></div>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">เปิดโปรเจกต์ + ให้ Claude รู้จักโค้ดเบส</h3>
+      <p><strong>ทำไม:</strong> <code>/init</code> จะสร้างไฟล์ <code>CLAUDE.md</code> ที่สรุปบริบทโปรเจกต์ Claude จะอ่านอัตโนมัติทุกครั้ง ทำให้ไม่ต้องอธิบายซ้ำ</p>
+      <pre><code><span class="cmt"># เข้าโฟลเดอร์โปรเจกต์แล้วเริ่ม</span>
+claude
+
+<span class="cmt"># ในเซสชัน Claude Code</span>
+/init</code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">ได้ไฟล์ <code>CLAUDE.md</code> ที่บันทึกคำสั่ง build/test และโครงสร้างโปรเจกต์</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">Explore — ให้สำรวจก่อน อย่าเพิ่งให้แก้</h3>
+      <p>ขอให้ Claude อ่านส่วนที่เกี่ยวกับธีม/สไตล์ก่อน เพื่อเข้าใจของเดิม</p>
+      <pre><code><span class="str">"อ่านไฟล์ที่เกี่ยวกับการจัดการธีม/สี แล้วสรุปให้ฟังว่าตอนนี้สไตล์ถูกตั้งที่ไหนบ้าง ยังไม่ต้องแก้"</span></code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">Plan — เข้า Plan Mode ขอแผนก่อนลงมือ</h3>
+      <p><strong>ทำไม:</strong> Plan Mode ให้ Claude ร่างแผนโดย <strong>ยังแก้ไฟล์ไม่ได้</strong> เรารีวิวแผนให้ตรงก่อน ลดการต้องรื้อทีหลัง</p>
+      <pre><code><span class="cmt"># กด Shift+Tab จนเข้าโหมด Plan แล้วพิมพ์</span>
+<span class="str">"วางแผนเพิ่มปุ่ม dark/light toggle ที่บันทึกค่าไว้ใน localStorage
+และใช้ค่าเดิมตอนเปิดหน้าใหม่ บอกเป็นขั้นตอนว่าจะแก้ไฟล์ไหนบ้าง"</span></code></pre>
+      <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">ถ้าแผนไม่ตรง ให้บอกแก้ตรงนี้เลย — ถูกกว่าการให้แก้โค้ดแล้วค่อยรื้อ</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">Code — อนุมัติแล้วให้ลงมือ + รันเทสต์</h3>
+      <pre><code><span class="str">"แผนโอเค ลงมือตามแผนได้เลย เสร็จแล้วรันเทสต์/เปิดแอปยืนยันว่าใช้งานได้จริง"</span></code></pre>
+      <p>กด <code>Esc</code> ได้ทุกเมื่อถ้าอยากหยุดแล้วเปลี่ยนทิศ และถ้า context เริ่มยาวให้ <code>/compact</code></p>
+    </div></div>
+
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <h3 id="s5">Commit — รีวิวด้วย subagent แล้ว commit</h3>
+      <pre><code><span class="str">"ใช้ subagent แบบ read-only รีวิวการเปลี่ยนแปลงนี้ก่อน
+แล้วถ้าโอเคให้ commit พร้อมเขียน commit message ให้"</span></code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">ได้ฟีเจอร์ dark mode + เทสต์ผ่าน + commit ที่อธิบายการเปลี่ยนแปลงชัดเจน</div></div>
+    </div></div>
+
+    <h2><span class="h-ico">📋</span> Prompt สรุป — คัดลอกไปใช้ได้เลย</h2>
+    <div class="prompt-box">
+      <div class="pb-head"><span>⌨️</span> Master Prompt — เพิ่มฟีเจอร์อย่างปลอดภัย</div>
+      <pre><code>งาน: เพิ่มปุ่ม dark/light toggle ที่จำค่าใน localStorage
+
+ทำตามขั้นตอนนี้:
+1) อ่านไฟล์ที่เกี่ยวกับธีม/สไตล์ แล้วสรุปของเดิมให้ฟัง (ยังไม่แก้)
+2) เข้า Plan Mode เสนอแผนแก้ทีละไฟล์ให้ฉันอนุมัติก่อน
+3) อนุมัติแล้วค่อยลงมือ + รันเทสต์/เปิดแอปยืนยัน
+4) ใช้ subagent read-only รีวิว แล้ว commit พร้อม message
+
+เริ่มจาก /init ถ้ายังไม่มี CLAUDE.md</code></pre>
+    </div>
+
+    <div class="takeaways">
+      <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
+      <ul>
+        <li>ใช้ <code>/init</code> + <code>CLAUDE.md</code> ให้ Claude เข้าใจโปรเจกต์ก่อนเริ่ม</li>
+        <li>แยก Explore/Plan ออกจาก Code — รีวิวแผนก่อนลงมือเสมอ</li>
+        <li>คุม context ด้วย <code>Esc</code> และ <code>/compact</code></li>
+        <li>รีวิวด้วย subagent read-only ก่อน commit</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

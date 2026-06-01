@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Subagent — แยกงานสำรวจออกจากลงมือ step by step — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: สร้าง subagent ที่รันใน context แยกเพื่อสำรวจ/รีวิว แล้วส่งสรุปกลับ main thread">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-subagent" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>Subagent</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 27</span>
+      <h1>Case Study: Subagent<br>แยกงาน "สำรวจ" ออกจาก "ลงมือ"</h1>
+      <p class="lead">โจทย์: ก่อนแก้บั๊กในโค้ดเบสใหญ่ ต้องสำรวจหลายไฟล์ — แต่ไม่อยากให้บริบทหลักรกจนหลงประเด็น ใช้ <b>subagent</b> ที่รันใน context แยกแล้วส่งเฉพาะสรุปกลับ</p>
+      <div class="meta-row"><span>🎯 ใช้กับ Claude Code</span><span>🧩 อิงคอร์ส <a class="link" href="subagents.html">Introduction to Subagents</a></span><span>📋 step-by-step</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> subagent คือผู้ช่วยที่รันใน <strong>context window แยก</strong> ขั้นตอนกลาง ๆ ไม่มารกใน main thread แล้วส่งกลับมาแค่ <strong>สรุป</strong> — เหมาะมากเมื่อ "ต้องการผลลัพธ์ ไม่ใช่ทุกขั้นตอน"</div></div>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">ตัดสินใจว่าควรใช้ subagent ไหม</h3>
+      <p>ใช้เมื่อ <strong>exploration แยกจาก execution</strong> ได้ชัด เช่น สำรวจโค้ดเบส, รีวิวโค้ด, หรืองาน research ที่อยากได้แค่บทสรุป + อยากกัน main context ไม่ให้รก</p>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">สร้าง subagent ด้วย /agents</h3>
+      <p><strong>ทำไม:</strong> ทำผ่านเมนูง่ายสุด — เลือก scope แล้วให้ Claude ช่วย generate config (เป็น markdown + YAML frontmatter)</p>
+      <pre><code>/agents
+<span class="cmt"># → Create new agent → เลือก Project หรือ User → ให้ Claude generate</span></code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">ออกแบบให้ดี 4 ข้อ</h3>
+      <pre><code><span class="cmt"># .claude/agents/explorer.md</span>
+---
+name: explorer
+description: ใช้สำรวจโค้ดเบสเพื่อหาจุดที่เกี่ยวกับบั๊ก แล้วสรุปกลับ
+tools: Read, Grep, Glob          <span class="cmt"># จำกัด tool ให้ read-only</span>
+---
+คุณคือผู้สำรวจโค้ด หา root cause ที่เป็นไปได้
+ส่งกลับเป็น: ไฟล์/บรรทัดที่เกี่ยว, สมมติฐาน, ขั้นตอนถัดไป
+ถ้าติดอุปสรรคให้บอกชัด ไม่ต้องเดา</code></pre>
+      <p>หลักออกแบบ: (1) <strong>description ดี</strong> (2) <strong>กำหนด output format</strong> (3) <strong>ให้รายงานอุปสรรค</strong> (4) <strong>จำกัด tool access</strong></p>
+    </div></div>
+
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">ใช้งาน — delegate แล้วรับสรุป</h3>
+      <pre><code><span class="str">"ใช้ explorer หาสาเหตุที่หน้า checkout คำนวณภาษีผิด
+แล้วสรุปจุดที่ต้องแก้กลับมา"</span></code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">main thread ได้สรุป "ไฟล์/บรรทัด + สมมติฐาน + ขั้นต่อไป" โดยไม่ถูกท่วมด้วยรายละเอียดการไล่อ่านทุกไฟล์</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <h3 id="s5">ต่อยอด: ทีมเล็ก ๆ ของ subagents</h3>
+      <p>เพิ่ม subagent อื่นที่ทำหน้าที่ต่างกัน เช่น <code>reviewer</code> (read-only รีวิวก่อน push) เพื่อได้ <strong>มุมมองสดที่ไม่มี bias</strong> ติดจากตอนเขียน</p>
+    </div></div>
+
+    <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">ถ้าจะให้ subagent ใช้ Skill ด้วย ต้อง list skills ใน frontmatter ของ subagent · syntax ล่าสุดที่ <a class="link" href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">code.claude.com/docs/en/sub-agents</a></div></div>
+
+    <div class="takeaways">
+      <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
+      <ul>
+        <li>subagent รันใน context แยก ส่งเฉพาะสรุปกลับ — กัน main context รก</li>
+        <li>สร้างผ่าน <code>/agents</code> (markdown + YAML frontmatter)</li>
+        <li>ออกแบบดี 4 ข้อ: description, output format, รายงานอุปสรรค, จำกัด tool</li>
+        <li>ใช้เมื่อแยก exploration ออกจาก execution หรืออยากได้มุมมองใหม่</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction to Claude Cowork — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Introduction to Claude Cowork: โหมดบนเดสก์ท็อปที่ทำงานหลายขั้นตอนบนไฟล์จริง — global instructions, projects, skills, plugins, Claude in Chrome, Microsoft 365 และการทำงานอย่างปลอดภัย">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="claude-cowork" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Claude Code &amp; Cowork</span> › <span>Introduction to Claude Cowork</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">💻 Claude Code &amp; Cowork · คอร์ส 05</span>
+      <h1>Introduction to Claude Cowork</h1>
+      <p class="lead">Claude Cowork คือโหมดบนเดสก์ท็อปที่คุณ <b>ชี้ไปที่โฟลเดอร์ + เชื่อมแอป</b> แล้วให้มันวางแผน ลงมือ และส่งมอบงานทั้งชิ้น — เหมือนมีเพื่อนร่วมงานที่ทำงานหลายขั้นตอนให้จบ</p>
+      <div class="meta-row">
+        <span>⏱️ 15 บท · ระดับเริ่มต้น</span>
+        <span>🎯 ต้องใช้ Claude Desktop</span>
+        <span>📌 สถานะ: ลงเรียนแล้ว</span>
+      </div>
+    </header>
+
+    <p class="section-intro">คอร์สนี้พาไล่จาก "Cowork คืออะไรและตั้งค่าอย่างไร" → ปรับแต่งให้เข้ากับงานของคุณ (global instructions/projects/skills/plugins) → ใช้ Claude ทุกที่ที่ทำงาน (Chrome, Microsoft 365) → จนถึงการแชร์และความปลอดภัย</p>
+
+    <h2><span class="h-ico">🤝</span> รู้จัก Claude Cowork</h2>
+    <p>Cowork ต่างจากโหมด Chat ตรงที่มัน <strong>ทำงานบนไฟล์จริงและข้ามหลายเครื่องมือ</strong> ได้ คุณชี้ให้มันดูโฟลเดอร์หนึ่ง เชื่อมแอปอย่าง Gmail/Slack/Drive แล้วสั่งงาน มันจะวางแผน-ลงมือ-ส่งมอบเป็นชิ้นงานให้ จุดสำคัญด้านความปลอดภัยคือมัน <strong>จะถามก่อนเสมอ</strong> เมื่อจะ send / delete / share</p>
+    <div class="video-embed yt-facade" data-yt="UAmKyyZ-b9E" data-title="What is Claude Cowork"></div>
+    <p class="video-meta">▶ วิดีโอ: แนะนำ Claude Cowork</p>
+
+    <h3>ตั้งค่าและมอบงานแรก</h3>
+    <p>ติดตั้ง Claude Desktop จาก claude.com/download แล้วเลือกโหมด Cowork การตั้งค่าที่สำคัญที่สุดคือ <strong>"Work in a project" แล้วเลือกโฟลเดอร์</strong> ที่จะให้ Cowork ทำงานด้วย งานที่เหมาะกับ Cowork มี 3 แบบ: <strong>หลายขั้นตอน (multi-step)</strong>, <strong>อิงไฟล์จริง</strong>, และ <strong>ข้ามหลายเครื่องมือ</strong> นอกจากนี้ยังตั้ง <code>/schedule</code> ให้ทำงานตามเวลา และใช้ Dispatch สั่งงานจากมือถือได้</p>
+    <p>เวลามอบงาน Claude จะ <strong>ถาม clarify ก่อนเริ่ม</strong> ระหว่างทาง steer ปรับทิศได้ และผลลัพธ์ออกมาเป็น <strong>artifact (ไฟล์)</strong> ให้รีวิวเหมือนรับงานจากเพื่อนร่วมงาน</p>
+
+    <h2><span class="h-ico">🧩</span> ปรับ Cowork ให้เป็นของคุณ — 4 building blocks</h2>
+    <div class="grid cols-2">
+      <div class="tile"><div class="t-ico">📋</div><h4>Global instructions</h4><p>คำสั่ง/ความชอบที่ใช้ได้กับทุก session — ตั้งครั้งเดียวมีผลตลอด</p></div>
+      <div class="tile"><div class="t-ico">📁</div><h4>Projects</h4><p>สร้าง memory จากบทสนทนาในโปรเจกต์นั้น ให้บริบทสะสมต่อเนื่อง</p></div>
+      <div class="tile"><div class="t-ico">📦</div><h4>Skills</h4><p>reusable playbook ที่สอนวิธีทำงานแบบที่คุณต้องการ โหลดอัตโนมัติเมื่อ task ตรง</p></div>
+      <div class="tile"><div class="t-ico">🔌</div><h4>Plugins</h4><p>ชุดของ skills + connectors + subagents รอบงานหนึ่ง ไว้ encode วิธีทำงานของทีม (Anthropic มี plugin ตาม role ให้)</p></div>
+    </div>
+
+    <h2><span class="h-ico">🌐</span> ใช้ Claude ทุกที่ที่ทำงาน</h2>
+    <p><strong>Claude in Chrome</strong> เป็นสะพานสำหรับเครื่องมือที่ยังไม่มี connector — อ่านและลงมือบนหน้าเว็บได้ ทำงานคู่กับ Cowork และก็ <strong>ถามก่อน action สำคัญ</strong> เช่นกัน ส่วน <strong>Claude for Microsoft 365</strong> เป็น add-in ใน Word/Excel/PowerPoint/Outlook ที่ carry context ข้ามแอปได้ — แนวคิดคือใช้ M365 ไว้ <em>ขัดเกลา</em> ไฟล์ที่ทำอยู่ ส่วน Cowork ไว้ <em>สร้าง</em> deliverable</p>
+
+    <h2><span class="h-ico">🛡️</span> แชร์และความปลอดภัย</h2>
+    <ul>
+      <li><strong>ทำงานอย่างปลอดภัย:</strong> ใช้โฟลเดอร์ทำงานเฉพาะ (อย่าใช้ Documents/Downloads/Desktop ตรง ๆ), เขียน prompt ให้ไม่กำกวม และรู้จังหวะ "stop and think"</li>
+      <li><strong>Validate ก่อนแชร์:</strong> ใช้ eval ทดสอบ skill ก่อนเอาไปแชร์ รัน lightweight eval ผ่าน skill-creator ได้</li>
+      <li><strong>แชร์กับทีม:</strong> bundle skills เป็น plugin แล้วแจกทั้งองค์กร (วิธีระดับ Enterprise)</li>
+    </ul>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>Cowork = ชี้โฟลเดอร์ + เชื่อมแอป แล้วให้ทำงาน multi-step บนไฟล์จริงจนจบเป็น artifact</li>
+        <li>ถามก่อนเสมอเมื่อจะ send/delete/share — ปลอดภัยกว่าโดยดีไซน์</li>
+        <li>ปรับแต่งด้วย 4 building blocks: global instructions, projects, skills, plugins</li>
+        <li>ใช้ Claude in Chrome และ Microsoft 365 เพื่อทำงานต่อในเครื่องมือที่ใช้จริง</li>
+        <li>ทำงานปลอดภัยด้วยโฟลเดอร์เฉพาะ, validate skill ก่อนแชร์, bundle เป็น plugin แจกทีม</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "Claude Cowork ต่างจากโหมด Chat อย่างไร?",
+        opts: ["เร็วกว่าเฉย ๆ", "ทำงานหลายขั้นตอนบนไฟล์จริงและข้ามหลายเครื่องมือ แล้วส่งมอบเป็น artifact", "ตอบสั้นกว่า", "ใช้บนมือถือเท่านั้น"],
+        answer: 1, explain: "Cowork วางแผน-ลงมือ-ส่งมอบงานทั้งชิ้นบนไฟล์จริง ต่างจาก Chat ที่ไว้ถาม/ร่าง" },
+      { q: "การตั้งค่าที่สำคัญที่สุดเมื่อเริ่มใช้ Cowork คือ?",
+        opts: ["เลือกธีมสี", "‘Work in a project’ แล้วเลือกโฟลเดอร์ให้ทำงานด้วย", "ปิด connector ทั้งหมด", "ตั้งรหัสผ่าน"],
+        answer: 1, explain: "ต้องชี้ Cowork ไปยังโฟลเดอร์ที่จะทำงานด้วยก่อน จึงจะทำงานบนไฟล์จริงได้" },
+      { q: "4 building blocks ที่ใช้ปรับแต่ง Cowork คืออะไร?",
+        opts: ["theme, font, color, layout", "global instructions, projects, skills, plugins", "API, SDK, MCP, hooks", "chat, code, cowork, research"],
+        answer: 1, explain: "Cowork ปรับแต่งได้ด้วย global instructions, projects, skills และ plugins" },
+      { q: "Plugin ใน Cowork คืออะไร?",
+        opts: ["ธีมเสริม", "ชุดของ skills + connectors + subagents รอบงานหนึ่ง ไว้ encode วิธีทำงานทีม", "ไฟล์ log", "โมเดลใหม่"],
+        answer: 1, explain: "Plugin รวม skills/connectors/subagents เข้าด้วยกันเพื่อ encode วิธีทำงานของทีมและแจกจ่ายได้" },
+      { q: "แนวปฏิบัติด้านความปลอดภัยที่คอร์สแนะนำคือ?",
+        opts: ["ใช้โฟลเดอร์ Desktop เสมอ", "ใช้โฟลเดอร์ทำงานเฉพาะ และ Cowork ถามก่อน send/delete/share", "ปิดการ clarify", "ให้สิทธิ์ทุกอย่างอัตโนมัติ"],
+        answer: 1, explain: "ควรใช้ dedicated working folder และอาศัยที่ Cowork ถามก่อนทำ action สำคัญ" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

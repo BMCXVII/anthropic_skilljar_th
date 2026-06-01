@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: MCP — ต่อ Claude เข้ากับข้อมูลภายนอก step by step — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: สร้าง MCP server ด้วย Python SDK แล้วต่อเข้ากับ Claude Code เพื่อให้เข้าถึง tools/data ของเราเอง">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-mcp" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>MCP</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 25</span>
+      <h1>Case Study: MCP<br>ต่อ Claude เข้ากับข้อมูล/เครื่องมือของเราเอง</h1>
+      <p class="lead">โจทย์: อยากให้ Claude เข้าถึง "ฐานความรู้ภายใน" ของทีม (เช่น คลังบทความ) — สร้าง <b>MCP server</b> เล็ก ๆ แล้วต่อเข้ากับ Claude Code</p>
+      <div class="meta-row"><span>🎯 Python SDK</span><span>🧩 อิงคอร์ส <a class="link" href="mcp-intro.html">Introduction to MCP</a></span><span>📋 step-by-step</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> MCP เป็น communication layer มาตรฐานที่ทำให้ต่อ tools/data ภายนอกได้โดยไม่ต้องเขียน integration เองทุกครั้ง เราจะสร้าง server ที่ expose <strong>tool</strong> ค้นบทความ และ <strong>resource</strong> ดึงเนื้อหา</div></div>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">ตั้งโปรเจกต์ + ติดตั้ง MCP SDK</h3>
+      <pre><code>uv init my-mcp-server &amp;&amp; cd my-mcp-server
+uv add "mcp[cli]"</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">นิยาม tool ด้วย decorator</h3>
+      <p><strong>ทำไม:</strong> Python SDK ใช้ decorator ทำให้นิยาม tool ได้สั้น ๆ — Claude จะเห็นชื่อ/คำอธิบายแล้วเรียกใช้เมื่อเหมาะ</p>
+      <pre><code><span class="cmt"># server.py</span>
+from mcp.server.fastmcp import FastMCP
+mcp = FastMCP("kb")
+
+@mcp.tool()
+def search_articles(keyword: str) -> list[str]:
+    """ค้นบทความในคลังความรู้จาก keyword"""
+    return kb_search(keyword)   <span class="cmt"># ฟังก์ชันจริงของเรา</span>
+
+if __name__ == "__main__":
+    mcp.run()</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">เพิ่ม resource (ข้อมูลแบบอ่าน)</h3>
+      <p><strong>resource</strong> เหมือน GET handler — expose ข้อมูลให้ใส่เข้า prompt ได้ตรง ๆ</p>
+      <pre><code>@mcp.resource("article://{id}")
+def get_article(id: str) -> str:
+    """ดึงเนื้อหาบทความตาม id"""
+    return kb_get(id)</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">debug ด้วย server inspector</h3>
+      <p>ก่อนต่อกับ Claude จริง ใช้ <strong>inspector</strong> ตรวจว่า tool/resource ทำงานถูกต้องแบบ real-time</p>
+      <pre><code>uv run mcp dev server.py</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <h3 id="s5">ต่อเข้ากับ Claude Code</h3>
+      <pre><code>claude mcp add kb -- uv run server.py
+/mcp   <span class="cmt"># ดูสถานะว่าต่อติดและเห็น tools/resources</span></code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">ถามว่า "หาบทความเรื่อง onboarding ให้หน่อย" แล้ว Claude เรียก <code>search_articles</code> ผ่าน MCP server ของเราได้เลย</div></div>
+    </div></div>
+
+    <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">แชร์ทั้งทีมด้วย project scope ใน <code>.mcp.json</code> (commit ได้); สำหรับ server ระยะไกลใช้ StreamableHTTP transport · syntax ล่าสุดที่ <a class="link" href="https://modelcontextprotocol.io" target="_blank" rel="noopener">modelcontextprotocol.io</a></div></div>
+
+    <div class="takeaways">
+      <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
+      <ul>
+        <li>MCP server expose ได้ทั้ง tools (ฟังก์ชัน) และ resources (ข้อมูลแบบอ่าน)</li>
+        <li>Python SDK + decorator ทำให้นิยามได้สั้น</li>
+        <li>debug ด้วย inspector ก่อน แล้วต่อด้วย <code>claude mcp add</code></li>
+        <li>แชร์ทีมผ่าน <code>.mcp.json</code> (project scope)</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

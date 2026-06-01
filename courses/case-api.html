@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Claude API — แชตบอตพร้อม tool use step by step — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: สร้างแชตบอตด้วย Claude API ที่จำบทสนทนา (stateless) และเรียก tool ภายนอกได้ ทีละขั้น">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-api" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>API</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 24</span>
+      <h1>Case Study: Claude API<br>แชตบอตที่จำบทสนทนา + เรียก tool ได้</h1>
+      <p class="lead">โจทย์: ทำผู้ช่วยตอบคำถามที่ <b>คุยต่อเนื่องได้</b> และดึงข้อมูลจริง (เช่น เช็คสภาพอากาศ) ผ่าน <b>tool use</b> — สร้างด้วย Claude API ทีละขั้น</p>
+      <div class="meta-row"><span>🎯 ระดับ developer</span><span>🧩 อิงคอร์ส <a class="link" href="claude-api.html">Building with the Claude API</a></span><span>📋 step-by-step</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> สองหัวใจที่ต้องเข้าใจ: (1) API เป็น <strong>stateless</strong> — ต้องเก็บประวัติ messages เองแล้วส่งทั้งชุดทุกครั้ง (2) <strong>tool use</strong> ให้ Claude เรียกฟังก์ชันของเราเพื่อดึงข้อมูลนอก training data</div></div>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">เตรียม API key + ติดตั้ง SDK</h3>
+      <pre><code><span class="cmt"># สร้าง key ที่ console.anthropic.com</span>
+export ANTHROPIC_API_KEY=sk-ant-...
+pip install anthropic</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">บทสนทนาต่อเนื่อง — เก็บ messages เอง</h3>
+      <p><strong>ทำไม:</strong> เพราะ stateless เราต้องสะสม list ของ messages แล้วส่งไปทั้งหมดในแต่ละ request</p>
+      <pre><code>from anthropic import Anthropic
+client = Anthropic()
+messages = []
+
+def chat(user_text):
+    messages.append({"role": "user", "content": user_text})
+    resp = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=1024,
+        messages=messages,
+    )
+    messages.append({"role": "assistant", "content": resp.content})
+    return resp</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">นิยาม tool ด้วย JSON schema</h3>
+      <p>บอก Claude ว่ามีเครื่องมืออะไร ใช้เมื่อไหร่ ผ่าน schema</p>
+      <pre><code>tools = [{
+  "name": "get_weather",
+  "description": "ดึงสภาพอากาศปัจจุบันของเมืองที่ระบุ",
+  "input_schema": {
+    "type": "object",
+    "properties": {"city": {"type": "string"}},
+    "required": ["city"],
+  },
+}]</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">วน loop: เรียก tool → ส่งผลกลับ</h3>
+      <p>ถ้า Claude ขอใช้ tool (stop reason = <code>tool_use</code>) ให้ execute ฟังก์ชันจริง แล้ว <strong>ส่งผลกลับเป็น message</strong> ให้มันตอบต่อ — วนจนได้คำตอบสุดท้าย</p>
+      <pre><code>resp = client.messages.create(model="claude-sonnet-4-6",
+    max_tokens=1024, messages=messages, tools=tools)
+
+while resp.stop_reason == "tool_use":
+    for block in resp.content:
+        if block.type == "tool_use":
+            result = get_weather(**block.input)   <span class="cmt"># ฟังก์ชันจริงของเรา</span>
+            messages.append({"role": "assistant", "content": resp.content})
+            messages.append({"role": "user", "content": [{
+                "type": "tool_result",
+                "tool_use_id": block.id,
+                "content": str(result),
+            }]})
+    resp = client.messages.create(model="claude-sonnet-4-6",
+        max_tokens=1024, messages=messages, tools=tools)</code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">แชตบอตคุยต่อเนื่องได้ และเมื่อถามเรื่องอากาศ มันจะเรียก <code>get_weather</code> เองแล้วตอบด้วยข้อมูลจริง</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <h3 id="s5">ต่อยอด</h3>
+      <ul>
+        <li><strong>streaming</strong> เพื่อแสดงผลทีละ chunk แก้ปัญหา response ช้า</li>
+        <li><strong>prompt caching</strong> เมื่อ system prompt/บริบทยาวและส่งซ้ำ ช่วยเร็ว+ถูกลง</li>
+        <li>เพิ่ม built-in tools เช่น web search; หรือทำ RAG ถ้าต้องอ้างอิงเอกสารเยอะ</li>
+      </ul>
+    </div></div>
+
+    <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">ชื่อโมเดล/พารามิเตอร์ล่าสุดให้ยึดตามเอกสารทางการที่ <a class="link" href="https://docs.anthropic.com" target="_blank" rel="noopener">docs.anthropic.com</a></div></div>
+
+    <div class="takeaways">
+      <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
+      <ul>
+        <li>API เป็น stateless — เก็บ messages เองแล้วส่งทั้งชุดทุกครั้ง</li>
+        <li>tool use: นิยาม tool ด้วย JSON schema แล้ววน loop จน stop reason จบ</li>
+        <li>ส่งผลของ tool กลับเป็น <code>tool_result</code> ให้ Claude ตอบต่อ</li>
+        <li>ต่อยอดด้วย streaming, prompt caching, web search, RAG</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

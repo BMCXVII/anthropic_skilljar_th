@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Building an AI Dev Team — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study แบบ interactive: จำลองทีม AI developer ที่คุยกันจริงพร้อม dashboard — subagents, skills จาก Git, MCP, RAG, hooks ตั้งแต่รับ requirement จนส่งมอบ">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-study-ai-dev-team" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>AI Dev Team</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 28 (จำลองทีม)</span>
+      <h1>Building an AI Dev Team<br>for a Startup Software House</h1>
+      <p class="lead">จำลอง "ทีม AI developer" ที่คุยกันจริง พร้อม dashboard — ดูทุก agent ทำงานประสานกันตั้งแต่รับ requirement จนเปิด PR โดยใช้ subagents, Skills จาก Git, MCP, RAG และ Hooks</p>
+      <div class="meta-row"><span>🎮 จำลองแบบ interactive</span><span>📊 ระดับสูง</span><span>🎯 ประกอบทุกฟีเจอร์เข้าด้วยกัน</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>วิธีใช้หน้านี้</strong>
+      กด <strong>▶ เริ่มจำลอง</strong> เพื่อดูทีม AI คุยกันทำงานทีละขั้น (หรือกด "ก้าวต่อไป" เพื่อเดินเอง) — ดู dashboard อัปเดตความคืบหน้า
+      จากนั้นคัดลอก <strong>prompt สรุป</strong> ด้านล่างไปลองตั้งทีมจริงใน Claude Code ได้เลย · อิงเอกสารทางการ
+      <a class="link" href="https://code.claude.com/docs" target="_blank" rel="noopener">code.claude.com/docs</a></div></div>
+
+    <h2><span class="h-ico">🎮</span> จำลองทีม: รับ Issue #57 → ส่งมอบ PR</h2>
+    <div id="cs-mount"></div>
+
+    <h2><span class="h-ico">📋</span> Prompt สรุป — คัดลอกไปใช้ได้เลย</h2>
+    <p>วาง prompt นี้ใน Claude Code (หลัง <code>/init</code>) เพื่อตั้งทีม AI dev แบบในภาพจำลองด้านบน:</p>
+    <div class="prompt-box">
+      <div class="pb-head"><span>🧑‍💻</span> Master Prompt — ตั้งทีม AI Dev</div>
+      <pre><code>ช่วยตั้งทีม AI developer สำหรับโปรเจกต์นี้ตามนี้:
+
+1) สร้าง subagents ใน .claude/agents/ :
+   - architect : read-only (Read, Grep, Glob), model opus — ออกแบบ + วางแผนสถาปัตยกรรม
+   - backend   : Read, Edit, Write, Bash — เขียน API/DB ตาม skill coding-standards
+   - frontend  : Read, Edit, Write — ทำ UI ตาม design system
+   - qa        : read-only — รีวิว bug + ความปลอดภัย ก่อน merge
+
+2) ตั้ง hook PostToolUse (matcher Edit|Write) ให้รัน prettier + tsc อัตโนมัติ
+   และ hook PreToolUse (matcher Bash) บล็อกคำสั่งอันตราย (rm -rf, DROP TABLE)
+
+3) ใช้ workflow: explore → plan → code → commit เสมอ
+   เมื่อฉันให้ GitHub issue ให้: ดึงรายละเอียด issue ผ่าน MCP →
+   architect วางแผน → ฉันอนุมัติ → backend/frontend ลงมือ + เขียนเทสต์ →
+   qa รีวิว → /code-review + /verify → เปิด PR ที่ลิงก์ issue
+
+เริ่มจากรัน /init แล้วสรุป "แผนการตั้งทีม" ให้ฉันอนุมัติก่อนลงมือจริง</code></pre>
+    </div>
+    <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">ปรับชื่อ tool/โมเดล/ขั้นตอนให้ตรงโปรเจกต์ของคุณได้ · ตรวจ syntax ล่าสุดของ subagent frontmatter และ hooks ที่ <a class="link" href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">docs/en/sub-agents</a> และ <a class="link" href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">docs/en/hooks</a></div></div>
+
+    <h2><span class="h-ico">🧩</span> เบื้องหลังแต่ละขั้น (อ้างอิงโค้ดจริง)</h2>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">ตั้ง subagent แต่ละบทบาท</h3>
+      <p><strong>ทำไม:</strong> แต่ละ subagent มี context window แยก จำกัด tool/model ตามบทบาท Claude หลัก delegate ให้ตาม <code>description</code></p>
+      <pre><code><span class="cmt"># .claude/agents/architect.md</span>
+---
+name: architect
+description: ออกแบบสถาปัตยกรรม/วางแผนก่อนเขียนโค้ด ใช้เมื่อรับฟีเจอร์ใหม่
+tools: Read, Grep, Glob
+model: opus
+---
+คุณคือ Software Architect เสนอโครงสร้างไฟล์ สัญญา API และความเสี่ยง
+เป็นแผนขั้นตอนที่ backend/frontend ทำต่อได้</code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body"><code>/agents</code> เห็น architect, backend, frontend, qa · สั่ง "ใช้ architect วางแผน..." แล้ว delegate อัตโนมัติ</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">ดึง Skills จาก Git + ผูกกับ agent</h3>
+      <p><strong>ทำไม:</strong> เก็บมาตรฐานทีม (coding-standards, api-conventions) เป็น Skill กลางใน Git ให้ทุกคนใช้เหมือนกัน</p>
+      <pre><code><span class="cmt"># clone skills กลางเข้าโปรเจกต์แล้ว commit</span>
+git clone https://git.example.com/team/team-skills .claude/skills-src
+cp -r .claude/skills-src/coding-standards .claude/skills/
+git add .claude/skills && git commit -m "add team skills"
+
+<span class="cmt"># หรือแจกเป็น plugin ผ่าน marketplace</span>
+/plugin marketplace add your-org/claude-plugins
+/plugin install team-skills@your-org</code></pre>
+      <p>ผูกกับ subagent ด้วยฟิลด์ <code>skills:</code> ใน frontmatter (preload เนื้อหาเข้า context). <em>หมายเหตุ: ปัจจุบัน custom commands รวมกับ Skills แล้ว</em></p>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">เชื่อม MCP (GitHub + ฐานข้อมูล)</h3>
+      <pre><code>claude mcp add --transport http github https://api.githubcopilot.com/mcp/ \
+  --header "Authorization: Bearer $GITHUB_PAT"
+claude mcp add db -- npx -y @bytebase/dbhub \
+  --dsn "postgresql://readonly:pass@localhost:5432/app"
+/mcp   <span class="cmt"># ดูสถานะ + ยืนยันตัวตน (OAuth)</span></code></pre>
+      <p>แชร์ทั้งทีมด้วย project scope ใน <code>.mcp.json</code> (commit ได้) — ให้สิทธิ์ DB แบบ read-only</p>
+    </div></div>
+
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">RAG + LLM Wiki ให้ทีมเข้าถึงความรู้</h3>
+      <p>เก็บความรู้ (ADR/สเปก/runbook) ใน <code>docs/</code> + ทำ Skill ที่ดึงสารบัญเข้า prompt อัตโนมัติด้วย dynamic injection:</p>
+      <pre><code>---
+name: project-wiki
+description: คลังความรู้โปรเจกต์ ใช้เมื่อถามเรื่องการตัดสินใจออกแบบ/ระบบเดิม
+---
+## สารบัญ wiki
+!`find docs/wiki -name '*.md' | sed 's|docs/wiki/||'`
+อ่านหัวข้อที่เกี่ยวข้องก่อนตอบ และอ้างอิงไฟล์เสมอ</code></pre>
+      <p>หลัก RAG (chunk → embed → retrieve, + BM25) เรียนเต็มในคอร์ส <a class="link" href="claude-api.html">Building with the Claude API</a></p>
+    </div></div>
+
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <h3 id="s5">Hooks บังคับมาตรฐานอัตโนมัติ</h3>
+      <pre><code><span class="cmt">// .claude/settings.json</span>
+{ "hooks": {
+  "PostToolUse": [{ "matcher": "Edit|Write",
+    "hooks": [{ "type": "command",
+      "command": "npx prettier --write \"$CLAUDE_PROJECT_DIR\" && npx tsc --noEmit" }] }],
+  "PreToolUse":  [{ "matcher": "Bash",
+    "hooks": [{ "type": "command", "command": ".claude/hooks/guard.sh" }] }]
+}}</code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">หลัง Claude แก้ไฟล์ โค้ดถูก format + ตรวจ type อัตโนมัติ และคำสั่งอันตรายถูกบล็อก (exit 2)</div></div>
+    </div></div>
+
+    <div class="takeaways">
+      <h3>✅ ฟีเจอร์ที่ใช้ครบใน Case Study นี้</h3>
+      <ul>
+        <li><strong>Subagents</strong> — architect/backend/frontend/qa แยก context + จำกัด tools/model + <code>skills:</code> preload</li>
+        <li><strong>Skills จาก Git</strong> — clone เข้า <code>.claude/skills/</code> หรือ plugin marketplace</li>
+        <li><strong>MCP</strong> — GitHub + Postgres, <code>.mcp.json</code> project scope</li>
+        <li><strong>RAG + LLM Wiki</strong> — docs ใน repo + wiki skill (dynamic injection)</li>
+        <li><strong>Hooks</strong> — PostToolUse (format/typecheck) + PreToolUse (guard)</li>
+        <li><strong>Workflow</strong> — explore → plan → code → commit + <code>/code-review</code> + <code>/verify</code> + PR; มนุษย์ approve เสมอ</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.CASE_STUDY = {
+      accent: "#2f9e8f",
+      deliverableLabel: "ส่งมอบแล้ว",
+      agents: [
+        { id: "pm",        name: "Claude (PM)", role: "Orchestrator", avatar: "🧑‍💼", color: "#cc785c" },
+        { id: "architect", name: "Architect",   role: "ออกแบบ/วางแผน", avatar: "🏛️", color: "#7c6aa8" },
+        { id: "backend",   name: "Backend",     role: "API / ฐานข้อมูล", avatar: "⚙️", color: "#5b7a8c" },
+        { id: "frontend",  name: "Frontend",    role: "UI", avatar: "🎨", color: "#2f9e8f" },
+        { id: "qa",        name: "QA Reviewer", role: "รีวิว/ความปลอดภัย", avatar: "🔍", color: "#c08a2e" },
+      ],
+      script: [
+        { from: "system", phase: "รับ Requirement", text: "👤 ผู้ใช้: “เพิ่มฟีเจอร์ลืมรหัสผ่านจาก GitHub issue #57”" },
+        { from: "pm", phase: "รับ Requirement", text: "รับงานครับ ขอดึงรายละเอียด issue #57 ผ่าน MCP ก่อน แล้วแตกงานให้ทีม" },
+        { from: "tool", name: "github.get_issue(#57)", text: "ต้องมีหน้า /forgot-password · ส่งอีเมล reset · token หมดอายุ 30 นาที" },
+        { from: "pm", phase: "วางแผน (Plan)", text: "@architect ช่วยออกแบบ flow + สัญญา API ให้หน่อย" },
+        { from: "architect", phase: "วางแผน (Plan)", deliverable: true, text: "เสนอ: <code>POST /auth/forgot</code> (สร้าง token + ส่งอีเมล), <code>POST /auth/reset</code> (ตรวจ token + ตั้งรหัสใหม่); เก็บ token แบบ hashed หมดอายุ 30 นาที" },
+        { from: "pm", phase: "วางแผน (Plan)", text: "อนุมัติแผน ✓ — @backend ทำ API, @frontend ทำหน้า UI" },
+        { from: "backend", phase: "เขียนโค้ด (Code)", text: "เพิ่ม 2 endpoint ตามแผน ยึด skill <code>coding-standards</code> และเขียนเทสต์คู่กัน" },
+        { from: "tool", name: "hook · PostToolUse", text: "prettier --write ✓  |  tsc --noEmit ✓ (ไม่มี type error)" },
+        { from: "frontend", phase: "เขียนโค้ด (Code)", text: "สร้างหน้า <code>/forgot-password</code> ตาม design system + เชื่อม API เรียบร้อย" },
+        { from: "backend", phase: "เขียนโค้ด (Code)", deliverable: true, text: "unit test 8 เคส รันผ่านทั้งหมด ✓" },
+        { from: "pm", phase: "รีวิว + QA", text: "@qa ช่วยรีวิวความปลอดภัยก่อน merge" },
+        { from: "qa", phase: "รีวิว + QA", text: "token เป็น hashed ✓ แต่ <code>/auth/forgot</code> ยังไม่มี rate-limit — เสี่ยงถูก abuse แนะนำให้เพิ่ม" },
+        { from: "backend", phase: "รีวิว + QA", text: "เพิ่ม rate-limit 5 ครั้ง/ชม. ตามรีวิว ✓" },
+        { from: "pm", phase: "ส่งมอบ (Commit)", text: "รัน <code>/code-review</code> ผ่าน และ <code>/verify</code> เปิดแอปจริง — หน้า forgot-password ทำงานได้" },
+        { from: "tool", name: "github.create_pr", deliverable: true, text: "เปิด PR #58 “Add forgot-password flow” (linked #57) ✓" },
+        { from: "pm", phase: "ส่งมอบ (Commit)", text: "สรุป: แก้ 4 ไฟล์ + เทสต์ 8 เคส + rate-limit — ส่งให้ทีมมนุษย์ตรวจรับ" },
+        { from: "system", phase: "เสร็จสิ้น", text: "✅ มนุษย์เป็นผู้ review & merge ขั้นสุดท้ายเสมอ — AI เร่งความเร็ว ไม่แทนการตัดสินใจ" },
+      ],
+    };
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/case-study.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building with the Claude API — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Building with the Claude API: API พื้นฐาน (stateless/streaming), prompt evaluation/engineering, tool use, RAG, ฟีเจอร์ Claude, MCP และ agents & workflows">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="claude-api" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>API &amp; MCP</span> › <span>Building with the Claude API</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🔌 API &amp; MCP · คอร์ส 08</span>
+      <h1>Building with the Claude API</h1>
+      <p class="lead">คอร์สใหญ่ที่สุดของ Academy — พาไปตั้งแต่เรียก API พื้นฐาน ไปจนถึงสร้าง <b>agent</b> ที่ใช้ tools, RAG และฟีเจอร์ต่าง ๆ ของ Claude</p>
+      <div class="meta-row">
+        <span>⏱️ 85 บท · ระดับสูง (engineer)</span>
+        <span>🎥 วิดีโอเล่นบนแพลตฟอร์ม (ต้อง login)</span>
+        <span>📌 สถานะ: ลงทะเบียนแล้ว</span>
+      </div>
+    </header>
+
+    <p class="section-intro">เพราะเนื้อหายาวมาก ด้านล่างสรุปเป็นใจความสำคัญตามลำดับ module ของคอร์สจริง — เพื่อให้เห็นภาพรวมว่าแต่ละช่วงสอนอะไรและต่อยอดกันอย่างไร</p>
+
+    <h2><span class="h-ico">🔑</span> เรียก Claude ผ่าน API</h2>
+    <p>เริ่มจากภาพรวมตระกูลโมเดล แล้วเข้าใจ <strong>request lifecycle 5 ขั้น</strong> สร้าง API key ที่ <code>console.anthropic.com</code> แล้วยิง request พื้นฐาน จุดที่ต้องจำให้แม่นคือ <strong>API เป็น stateless</strong> — มันไม่จำบทสนทนาให้ ดังนั้นการทำ multi-turn ต้อง <strong>เก็บ list ของ messages เองแล้วส่งทั้งชุดทุกครั้ง</strong> นอกจากนี้ยังมี <strong>system prompt</strong> (กำหนดบทบาท), <strong>temperature</strong> (ปรับความสุ่ม), <strong>response streaming</strong> (ส่งทีละ chunk แก้ปัญหา response ช้า) และการขอ <strong>structured data</strong> (เช่น JSON)</p>
+
+    <h2><span class="h-ico">📊</span> Prompt evaluation</h2>
+    <p>ก่อนจะปรับ prompt ต้อง "วัด" ได้ก่อน — eval คือการทดสอบอัตโนมัติว่า prompt ทำงานดีแค่ไหน workflow มี 5 ขั้น: <strong>ร่าง prompt → สร้าง dataset → รัน eval → ให้คะแนน (grade) → ปรับ</strong> การให้คะแนนทำได้ 2 แบบ: <strong>model-based grading</strong> (ให้โมเดลให้คะแนน 1–10) หรือ <strong>code-based grading</strong> (ตรวจ format/syntax ด้วยโค้ด)</p>
+
+    <h2><span class="h-ico">✍️</span> Prompt engineering</h2>
+    <p>ปรับ prompt แบบวนซ้ำ: ตั้งเป้า → ประเมิน → ปรับ หลักสำคัญคือ <strong>ชัดเจนและตรงประเด็น</strong> (บรรทัดแรกสำคัญที่สุด), <strong>เจาะจง</strong> ให้ guideline ชัด, ใช้ <strong>XML tags</strong> จัดโครงสร้าง และ <strong>ให้ตัวอย่าง</strong> (one-shot / multi-shot)</p>
+
+    <h2><span class="h-ico">🛠️</span> Tool use</h2>
+    <p>Tools ให้ Claude เข้าถึงข้อมูล/ระบบภายนอกที่อยู่นอก training data ได้ คุณนิยาม tool เป็น Python function พร้อม <strong>JSON schema</strong> ที่บอก Claude ว่าจะใช้เมื่อไหร่/อย่างไร เมื่อ Claude ตอบกลับมาเป็นหลาย block ให้ execute function แล้วส่งผลกลับ — ทำซ้ำได้จน stop reason บอกว่าจบ รองรับทั้ง <strong>หลาย tool</strong>, <strong>fine-grained tool calling</strong> (อัปเดต argument แบบ streaming) และ built-in tools อย่าง <strong>text editor</strong> และ <strong>web search</strong></p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/api-tooluse-1.png" alt="tool use overview" loading="lazy"><figcaption>Claude เข้าถึงข้อมูลภายนอกผ่าน tools</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/api-tooluse-2.png" alt="flow การเรียก tool" loading="lazy"><figcaption>flow การเรียก tool และส่งผลกลับ</figcaption></figure>
+    </div>
+    <div class="platform-video">
+      <div class="pv-ico">▶</div>
+      <div class="pv-body"><strong>วิดีโอบทเรียน: Introducing tool use</strong><span>วิดีโอเล่นบนแพลตฟอร์ม Anthropic Academy</span></div>
+      <a class="pv-btn" href="https://anthropic.skilljar.com/claude-with-the-anthropic-api/287747" target="_blank" rel="noopener">ดูในเว็บ (ต้อง login) ↗</a>
+    </div>
+
+    <h2><span class="h-ico">🔎</span> RAG และ Agentic Search</h2>
+    <p><strong>RAG (Retrieval-Augmented Generation)</strong> คือการดึงข้อมูลที่เกี่ยวข้องมาเสริมก่อนให้ Claude ตอบ เริ่มจากกลยุทธ์แบ่ง <strong>chunk</strong> แล้วแปลงข้อความเป็น <strong>vector ด้วย embeddings</strong> เพื่อทำ semantic search</p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/api-embeddings-1.jpg" alt="text embeddings" loading="lazy"><figcaption>text embeddings — แปลงข้อความเป็น vector</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/api-embeddings-2.jpg" alt="vector space / similarity" loading="lazy"><figcaption>vector space / ความคล้ายของ embeddings</figcaption></figure>
+    </div>
+    <p>วงจร RAG ครบคือ <strong>chunk → embed → store → search → generate</strong> และทำให้ดีขึ้นได้ด้วยการรวม <strong>BM25 (lexical search)</strong> เข้ากับ semantic search เป็น <strong>multi-index pipeline</strong> ที่ใช้จุดแข็งของทั้งสองแบบ</p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/api-rag-1-flow.jpg" alt="RAG pipeline" loading="lazy"><figcaption>ขั้นตอน RAG ครบวง (chunk→embed→store→search→generate)</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/api-rag-2-retrieval.jpg" alt="retrieval + generation" loading="lazy"><figcaption>retrieval + generation</figcaption></figure>
+    </div>
+
+    <h2><span class="h-ico">✨</span> ฟีเจอร์ของ Claude</h2>
+    <div class="grid cols-2">
+      <div class="tile"><div class="t-ico">🧠</div><h4>Extended thinking</h4><p>ให้คิดลึกสำหรับงาน reasoning ซับซ้อน — ใช้พอเหมาะเพราะมี cost/latency</p></div>
+      <div class="tile"><div class="t-ico">🖼️</div><h4>Image / PDF support</h4><p>วิเคราะห์รูปด้วย vision และอ่าน/วิเคราะห์ PDF ได้โดยตรง</p></div>
+      <div class="tile"><div class="t-ico">📎</div><h4>Citations</h4><p>อ้างอิงแหล่งที่มา เพิ่มความโปร่งใสและ verify ได้</p></div>
+      <div class="tile"><div class="t-ico">⚡</div><h4>Prompt caching</h4><p>เก็บผลประมวลผลของข้อความเดิมไว้ใช้ซ้ำ เร็วและถูกลงเมื่อส่งเนื้อหาเหมือนเดิม</p></div>
+    </div>
+    <p>และยังมี <strong>Code Execution + Files API</strong> ที่ทำงานคู่กันเพื่อ delegate งานซับซ้อนให้ Claude</p>
+
+    <h2><span class="h-ico">🔌</span> Model Context Protocol (MCP)</h2>
+    <p>MCP เป็น communication layer ที่ <strong>ย้ายภาระเรื่อง tool ไปไว้ที่ server</strong> — มี client/server และ message types (เช่น ListTools) คอร์สพาสร้าง CLI chatbot ด้วย Python SDK + decorators, ใช้ <strong>server inspector</strong> debug, นิยาม <strong>resources</strong> (คล้าย GET handler) และ <strong>prompts</strong> (template) <a class="link" href="mcp-intro.html">เรียนลงลึกได้ในคอร์ส Introduction to MCP →</a></p>
+
+    <h2><span class="h-ico">🤖</span> Agents และ Workflows</h2>
+    <p>เมื่องานทำครั้งเดียวไม่จบ มี 2 แนวทาง: <strong>workflows</strong> ที่กำหนดขั้นตอนไว้ล่วงหน้า (parallelization = แยกทำพร้อมกัน, chaining = ต่อ output→input, routing = จัดประเภทแล้วส่งวิธีเฉพาะ) กับ <strong>agents</strong> ที่ให้ <strong>goal + tools</strong> แล้วปล่อยให้ Claude คิดเอง</p>
+    <div class="media-grid">
+      <figure class="fig"><img src="../assets/img/api-agents-1-goal-tools.jpg" alt="agent = goal + tools" loading="lazy"><figcaption>agent = goal + tools (ต่างจาก workflow ที่รู้ขั้นตอน)</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/api-agents-2-combine.jpg" alt="การผสม tools" loading="lazy"><figcaption>การผสม tool หลายตัวเข้าด้วยกัน</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/api-agents-3-loop.jpg" alt="agent loop" loading="lazy"><figcaption>agent loop / combine tools เพื่อบรรลุเป้าหมาย</figcaption></figure>
+    </div>
+    <p>สรุปการเลือก: <strong>workflows</strong> = predefined คุมได้/คาดเดาง่าย, <strong>agents</strong> = ยืดหยุ่นแต่แลกมาด้วย reliability/cost ที่คุมยากกว่า</p>
+    <div class="platform-video">
+      <div class="pv-ico">▶</div>
+      <div class="pv-body"><strong>วิดีโอบทเรียน: Agents and tools</strong><span>วิดีโอเล่นบนแพลตฟอร์ม Anthropic Academy</span></div>
+      <a class="pv-btn" href="https://anthropic.skilljar.com/claude-with-the-anthropic-api/287803" target="_blank" rel="noopener">ดูในเว็บ (ต้อง login) ↗</a>
+    </div>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>API เป็น stateless — ต้องเก็บ messages เองแล้วส่งทั้งชุดทุกครั้ง; ใช้ streaming แก้ปัญหา response ช้า</li>
+        <li>วัดด้วย evals ก่อนปรับ prompt; prompt engineering = ชัดเจน เจาะจง ใช้ XML tags และให้ตัวอย่าง</li>
+        <li>Tool use ให้ Claude เข้าถึงระบบภายนอกผ่าน function + JSON schema</li>
+        <li>RAG: chunk → embed → store → search → generate; ผสม BM25 + semantic เป็น multi-index</li>
+        <li>ฟีเจอร์เด่น: extended thinking, vision/PDF, citations, prompt caching, code execution + Files API</li>
+        <li>เลือก workflow (คุมได้) หรือ agent (goal+tools ยืดหยุ่น) ตามงาน</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "เพราะ API เป็น stateless การทำบทสนทนาต่อเนื่อง (multi-turn) ต้องทำอย่างไร?",
+        opts: ["เปิดโหมด memory", "เก็บ list ของ messages เองแล้วส่งทั้งชุดทุกครั้ง", "ตั้ง temperature สูง", "ใช้ streaming"],
+        answer: 1, explain: "API ไม่จำบทสนทนาให้ จึงต้องเก็บประวัติ messages เองแล้วส่งไปทั้งหมดในแต่ละ request" },
+      { q: "ลำดับของ RAG flow ที่ถูกต้องคือ?",
+        opts: ["search → embed → chunk → generate", "chunk → embed → store → search → generate", "generate → store → search", "embed → generate → chunk"],
+        answer: 1, explain: "RAG ครบวง: แบ่ง chunk → ทำ embeddings → เก็บ → ค้น → ให้ Claude generate คำตอบ" },
+      { q: "ข้อใดอธิบาย ‘agent’ ได้ถูกต้องเมื่อเทียบกับ ‘workflow’?",
+        opts: ["agent กำหนดทุกขั้นตอนไว้ล่วงหน้า", "agent ได้ goal + tools แล้วคิดเอง ส่วน workflow กำหนดขั้นตอนตายตัว", "ไม่มีความต่าง", "workflow ยืดหยุ่นกว่า agent"],
+        answer: 1, explain: "agent ทำงานจากเป้าหมาย+เครื่องมือและตัดสินใจเอง ขณะที่ workflow มีขั้นตอนกำหนดไว้" },
+      { q: "Prompt caching ช่วยเรื่องอะไร?",
+        opts: ["เพิ่มความสุ่ม", "เก็บผลประมวลผลของข้อความเดิมไว้ใช้ซ้ำ ทำให้เร็วและถูกลง", "แปลภาษา", "ลบ context"],
+        answer: 1, explain: "เมื่อส่งเนื้อหาเดิมซ้ำ prompt caching ช่วยลด latency และต้นทุน" },
+      { q: "วิธีให้คะแนน eval แบบ ‘code-based grading’ คือ?",
+        opts: ["ให้โมเดลให้คะแนน 1–10", "ตรวจ format/syntax ด้วยโค้ด", "ให้คนอ่านทั้งหมด", "สุ่มคะแนน"],
+        answer: 1, explain: "code-based grading ตรวจผลด้วยโค้ด (เช่น format/syntax) ส่วน model-based ให้โมเดลให้คะแนน" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

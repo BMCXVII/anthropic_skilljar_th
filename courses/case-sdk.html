@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Agent SDK — รัน Claude Code ด้วยโค้ด step by step — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: ใช้ Claude Agent SDK (@anthropic-ai/claude-agent-sdk) รัน Claude Code แบบ programmatic เพื่อทำงานอัตโนมัติ">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-sdk" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>SDK</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 23</span>
+      <h1>Case Study: Agent SDK<br>รัน Claude Code แบบ programmatic</h1>
+      <p class="lead">โจทย์: อยากให้ "ตัวช่วยเขียนโค้ด" ทำงานอัตโนมัติในสคริปต์/CI ของเรา ไม่ใช่พิมพ์มือใน terminal — ใช้ <b>Agent SDK</b> ที่ใช้ agent loop เดียวกับ Claude Code</p>
+      <div class="meta-row"><span>🎯 TypeScript / Python</span><span>🧩 อิงคอร์ส <a class="link" href="claude-code-in-action.html">Claude Code in Action</a></span><span>📋 step-by-step</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> Agent SDK ให้เรารัน Claude Code <strong>จากโค้ดของเราเอง</strong> ด้วย agent loop เดียวกับ CLI — เหมาะกับงานอัตโนมัติ เช่น สร้าง changelog, ตอบ issue, หรือ batch แก้ไฟล์ แพ็กเกจคือ <code>@anthropic-ai/claude-agent-sdk</code></p></div></div>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">ติดตั้งแพ็กเกจ</h3>
+      <pre><code><span class="cmt"># TypeScript / Node</span>
+npm install @anthropic-ai/claude-agent-sdk
+
+<span class="cmt"># ตั้งค่า API key ผ่าน environment variable</span>
+export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">เขียนสคริปต์เรียก agent loop</h3>
+      <p><strong>ทำไม:</strong> SDK ใช้ loop เดียวกับ CLI (รวบรวม context → ลงมือผ่าน tools → วนซ้ำ) เราแค่ส่ง prompt แล้วรับผลลัพธ์มาใช้ต่อในโปรแกรม</p>
+      <pre><code><span class="cmt">// gen-changelog.ts</span>
+import { query } from "@anthropic-ai/claude-agent-sdk";
+
+for await (const msg of query({
+  prompt: "อ่าน git log 20 รายการล่าสุด แล้วสร้าง CHANGELOG.md จัดกลุ่มเป็น Features/Fixes",
+})) {
+  console.log(msg);
+}</code></pre>
+      <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">โครงสร้าง API ที่แน่นอน (ชื่อฟังก์ชัน/ออปชัน) ให้ยึดตามเอกสารทางการของ SDK เวอร์ชันที่ใช้ — แนวคิดหลักคือ "ส่ง prompt → รับสตรีมข้อความ/ผลของ tool กลับมา"</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">รันและเก็บผลไปใช้ต่อ</h3>
+      <pre><code>npx tsx gen-changelog.ts</code></pre>
+      <p>เพราะมันรันเป็นโค้ด เราจึงเอาไปต่อใน <strong>CI/CD</strong> ได้ เช่น ให้รันตอนเปิด PR เพื่อสร้าง changelog หรือสรุปการเปลี่ยนแปลงอัตโนมัติ</p>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">ได้ความสามารถแบบ Claude Code (แก้ไฟล์/รันคำสั่ง) แต่สั่งจากสคริปต์ ไม่ต้องมีคนนั่งพิมพ์</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">เลือกใช้ให้เหมาะ: SDK vs CLI</h3>
+      <ul>
+        <li><strong>CLI (claude):</strong> งานโต้ตอบรายวัน นั่งทำกับมือ</li>
+        <li><strong>Agent SDK:</strong> งานอัตโนมัติ/ทำซ้ำ/ฝังในระบบอื่น — เรียกจากโค้ด</li>
+      </ul>
+    </div></div>
+
+    <div class="takeaways">
+      <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
+      <ul>
+        <li>Agent SDK รัน Claude Code แบบ programmatic ด้วย agent loop เดียวกับ CLI</li>
+        <li>แพ็กเกจ <code>@anthropic-ai/claude-agent-sdk</code> รองรับ TypeScript/Python</li>
+        <li>เหมาะกับงานอัตโนมัติ/CI — ส่ง prompt แล้วรับผลกลับมาใช้ต่อ</li>
+        <li>ยึดเอกสารทางการสำหรับ API ที่แน่นอนของเวอร์ชันที่ใช้</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

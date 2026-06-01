@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Skill — สร้าง playbook ใช้ซ้ำ step by step — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: สร้าง Agent Skill (SKILL.md) สำหรับเขียน PR description ให้สม่ำเสมอ พร้อมแชร์ทีมผ่าน Git">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-skill" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>Skill</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 21</span>
+      <h1>Case Study: Skill<br>สร้าง playbook "เขียน PR description" ใช้ซ้ำทั้งทีม</h1>
+      <p class="lead">โจทย์: ทุกคนเขียน PR description คนละสไตล์ อยากให้ Claude เขียนให้ <b>รูปแบบเดียวกัน</b> ทุกครั้ง — แก้ด้วยการทำเป็น <b>Skill</b></p>
+      <div class="meta-row"><span>🎯 ใช้กับ Claude Code / Cowork</span><span>🧩 อิงคอร์ส <a class="link" href="agent-skills.html">Introduction to Agent Skills</a></span><span>📋 step-by-step</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> Skill คือโฟลเดอร์ + ไฟล์ <code>SKILL.md</code> ที่สอนวิธีทำงานเฉพาะ Claude จะ <strong>หยิบมาใช้เองเมื่อ task ตรง</strong> ผ่าน semantic matching เราจะทำ skill ที่ทำให้ PR description ออกมาเป็นรูปแบบเดียวกันเสมอ</div></div>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">สร้างโฟลเดอร์ skill + ไฟล์ SKILL.md</h3>
+      <p><strong>ทำไม:</strong> <code>name</code> + <code>description</code> ใน frontmatter คือสิ่งที่ Claude ใช้ "match" ว่าเมื่อไหร่ควรหยิบ skill นี้ — เขียน description ให้ชัดและตรงงาน</p>
+      <pre><code><span class="cmt"># project: .claude/skills/pr-writer/SKILL.md</span>
+---
+name: pr-writer
+description: ใช้เมื่อผู้ใช้ขอเขียน/สรุป PR description จาก diff หรือ commit
+---
+# วิธีเขียน PR description ของทีมเรา
+เขียนตามหัวข้อนี้เสมอ:
+1. Summary — สรุปสั้นว่าทำอะไร/ทำไม
+2. Changes — bullet สิ่งที่เปลี่ยน
+3. Testing — ทดสอบอะไรไปบ้าง
+4. Risk/Notes — ผลกระทบหรือข้อควรระวัง
+ภาษากระชับ ใช้ present tense</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">เลือกที่เก็บ: personal หรือ project</h3>
+      <p>เก็บได้ 2 ที่ — <strong>personal</strong> (<code>~/.claude/skills</code>) ใช้ส่วนตัวทุกโปรเจกต์ หรือ <strong>project</strong> (<code>.claude/skills</code>) ผูกกับ repo เพื่อแชร์ทีม เคสนี้เลือก project แล้ว restart เพื่อให้ตรวจเจอ</p>
+    </div></div>
+
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">ลองใช้งาน — ให้ skill trigger เอง</h3>
+      <p>ไม่ต้องสั่งชื่อ skill ตรง ๆ แค่ขอสิ่งที่ description ครอบคลุม Claude จะ <strong>ขอ confirmation ก่อนโหลดเต็ม</strong> แล้วทำตาม playbook</p>
+      <pre><code><span class="str">"ช่วยเขียน PR description จาก diff ของ branch นี้ให้หน่อย"</span></code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">ได้ PR description ตามหัวข้อ Summary / Changes / Testing / Risk ทุกครั้ง</div></div>
+    </div></div>
+
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">จัดระเบียบ + แชร์ทีมผ่าน Git</h3>
+      <p>ใช้ <strong>progressive disclosure</strong>: เก็บ <code>SKILL.md</code> ให้สั้น (&lt; 500 บรรทัด) แล้ว link ไปไฟล์ตัวอย่าง/สคริปต์เพิ่ม จากนั้น commit เข้า repo ให้ทุกคนได้ skill เดียวกัน</p>
+      <pre><code>git add .claude/skills/pr-writer && git commit -m "add pr-writer skill"</code></pre>
+    </div></div>
+
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <h3 id="s5">แก้ปัญหาเมื่อ skill ไม่ทำงาน</h3>
+      <ul>
+        <li><strong>ไม่ trigger</strong> → ปรับ <code>description</code> ให้ตรงกับคำที่ผู้ใช้พิมพ์จริง</li>
+        <li><strong>ไม่โหลด</strong> → ตรวจว่า <code>SKILL.md</code> โครงสร้างถูก (frontmatter ครบ)</li>
+        <li><strong>หยิบผิดตัว</strong> → description ของหลาย skill คล้ายกันเกินไป ให้เขียนให้ต่างชัด</li>
+      </ul>
+    </div></div>
+
+    <h2><span class="h-ico">📋</span> เทมเพลต SKILL.md — คัดลอกไปปรับใช้</h2>
+    <div class="prompt-box">
+      <div class="pb-head"><span>📦</span> SKILL.md เริ่มต้น</div>
+      <pre><code>---
+name: ชื่อ-skill-แบบ-kebab-case
+description: ใช้เมื่อ... (ระบุสถานการณ์/คำที่ผู้ใช้จะพิมพ์ให้ชัด)
+---
+# หัวข้อ skill
+อธิบายขั้นตอน/กฎที่อยากให้ Claude ทำตาม เป็น bullet สั้น ๆ
+(ถ้ายาว ให้แยกไฟล์แล้ว link ถึง — progressive disclosure)</code></pre>
+    </div>
+
+    <div class="takeaways">
+      <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
+      <ul>
+        <li>Skill = โฟลเดอร์ + SKILL.md; <code>description</code> คือกุญแจให้ trigger ถูก</li>
+        <li>เก็บที่ project (<code>.claude/skills</code>) เพื่อแชร์ทีมผ่าน Git</li>
+        <li>ใช้ progressive disclosure ให้ SKILL.md กระชับ</li>
+        <li>แก้ปัญหา trigger/โหลด/หยิบผิด ที่ description เป็นหลัก</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

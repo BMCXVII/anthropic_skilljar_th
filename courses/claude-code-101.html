@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code 101 — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="สรุปคอร์ส Claude Code 101: coding agent, agentic loop, workflow Explore → Plan → Code → Commit, การคุม context, CLAUDE.md, Subagents, Skills, MCP และ Hooks">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="claude-code-101" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Claude Code &amp; Cowork</span> › <span>Claude Code 101</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">💻 Claude Code &amp; Cowork · คอร์ส 03</span>
+      <h1>Claude Code 101</h1>
+      <p class="lead">รู้จัก Claude Code — coding agent ที่ทำงานในเทอร์มินัล/IDE ของคุณจริง ๆ พร้อมจับหัวใจของการทำงานแบบ agentic ผ่าน workflow <b>Explore → Plan → Code → Commit</b></p>
+      <div class="meta-row">
+        <span>⏱️ 13 บท · ระดับเริ่มต้น (dev)</span>
+        <span>🎯 ต้องมี Claude Pro/Max หรือ API key</span>
+        <span>📌 สถานะ: ลงเรียนแล้ว · คืบหน้า ~92%</span>
+      </div>
+    </header>
+
+    <p class="section-intro">คอร์สนี้พาไล่จาก "Claude Code คืออะไร" → ติดตั้งและสั่งงานครั้งแรก → workflow ที่ใช้ทุกวัน → จนถึงการปรับแต่งด้วย CLAUDE.md, Subagents, Skills, MCP และ Hooks. ด้านล่างเรียบเรียงตามลำดับบทเรียนจริง พร้อมวิดีโอประกอบในแต่ละหัวข้อ.</p>
+
+    <h2><span class="h-ico">🤖</span> Claude Code คืออะไร</h2>
+    <p>Claude Code คือ <strong>agentic coding tool</strong> ที่เข้าใจทั้ง codebase แก้ไฟล์ และรันคำสั่งให้ได้เอง ใช้ได้หลายที่ทั้งในเทอร์มินัล, VS Code, JetBrains, Claude Desktop และบนเว็บ จุดที่ต่างจากการคุยใน Claude.ai คือมัน <strong>เข้าถึงไฟล์และเทอร์มินัลของคุณได้โดยตรง</strong> จึงไม่ต้องคอย copy-paste โค้ดไปมา</p>
+    <div class="grid cols-2">
+      <div class="tile"><div class="t-ico">⌨️</div><h4>Autocomplete แบบเดิม</h4><p>เติมโค้ดทีละบรรทัดตรงเคอร์เซอร์ — คุณต้องนำทุกขั้นตอนเอง</p></div>
+      <div class="tile"><div class="t-ico">🤖</div><h4>Coding Agent</h4><p>รับเป้าหมายระดับงาน แล้ววางแผน แก้หลายไฟล์ รันคำสั่ง ตรวจผล และวนแก้จนเสร็จ</p></div>
+    </div>
+
+    <h3>How Claude Code works — agentic loop</h3>
+    <p>หัวใจคือวงจรที่เรียกว่า agentic loop: <strong>ป้อน prompt → Claude รวบรวม context (คุยกับโมเดล ได้ผลเป็นข้อความหรือการเรียก tool) → ลงมือทำ (เช่น อ่าน/แก้ไฟล์ รันคำสั่ง) → วนซ้ำ</strong> จนงานเสร็จ พูดง่าย ๆ คือมันทำงานคล้าย developer คนหนึ่งที่ค่อย ๆ สำรวจ ลงมือ แล้วตรวจผลเอง</p>
+    <div class="video-embed yt-facade" data-yt="6bs5b4FltCU" data-title="How Claude Code works — agentic loop"></div>
+    <p class="video-meta">▶ วิดีโอ: อธิบาย agentic loop ของ Claude Code</p>
+
+    <h2><span class="h-ico">🚀</span> ติดตั้งและ prompt แรก</h2>
+    <p>ติดตั้งได้หลายช่องทางตามระบบของคุณ: <strong>macOS / Linux / WSL</strong> ใช้ <code>curl</code> (หรือ Homebrew), <strong>Windows</strong> ใช้ PowerShell / cmd / winget. เสร็จแล้วเข้าโฟลเดอร์โปรเจกต์แล้วพิมพ์ <code>claude</code> เพื่อเริ่ม (ครั้งแรกจะให้เลือกธีม) — ดูคำสั่งติดตั้งล่าสุดได้ที่เอกสารทางการ</p>
+    <pre><code><span class="cmt"># เข้าโฟลเดอร์โปรเจกต์แล้วเริ่ม</span>
+claude
+
+<span class="cmt"># แล้วสั่งงานเป็นภาษาธรรมชาติได้เลย เช่น</span>
+<span class="str">"อธิบายโครงสร้างโปรเจกต์นี้ให้หน่อย"</span>
+<span class="str">"เพิ่ม endpoint /health ที่คืนค่า status ok แล้วเขียนเทสต์"</span></code></pre>
+    <div class="callout info"><div class="c-ico">⌨️</div><div class="c-body"><strong>เลือกโหมดอนุมัติด้วย Shift+Tab</strong> สลับระหว่าง <b>Approval</b> (ขออนุญาตทุกครั้งก่อนแก้/รัน — ปลอดภัยกว่า) กับ <b>Auto-Accept</b> (ปล่อยให้ทำต่อเนื่อง)</div></div>
+
+    <h2><span class="h-ico">🧭</span> Workflow ที่ใช้ทุกวัน</h2>
+
+    <h3>Explore → Plan → Code → Commit</h3>
+    <p>นี่คือ workflow ที่คอร์สเน้นว่าสำคัญที่สุด แนวคิดคือ <strong>แยก "วางแผน" ออกจาก "ลงมือ"</strong> ก่อน ให้ Claude อ่านไฟล์ที่เกี่ยวข้องและเข้าใจของเดิมเสียก่อน (Explore) แล้วใช้ <strong>Plan Mode</strong> ให้มันร่างแผนโดยที่ยังแก้ไฟล์ไม่ได้ (Plan) เมื่อแผนตรงใจค่อยให้ลงมือ (Code) แล้วจบด้วยการ commit การทำแบบนี้ช่วยลดการต้องรื้อแก้ทีหลังได้มาก</p>
+    <div class="grid cols-2">
+      <div class="tile"><div class="t-ico">🔍</div><h4>1. Explore</h4><p>ให้ Claude อ่าน/ทำความเข้าใจโค้ดเบสที่เกี่ยวข้องก่อน อย่าเพิ่งให้แก้</p></div>
+      <div class="tile"><div class="t-ico">📝</div><h4>2. Plan</h4><p>ใช้ Plan Mode (Shift+Tab) ให้วางแผนก่อนลงมือ เพื่อรีวิวแนวทางให้ตรง</p></div>
+      <div class="tile"><div class="t-ico">⌨️</div><h4>3. Code</h4><p>ลงมือแก้ตามแผน รันเทสต์/คำสั่งเพื่อยืนยันว่าทำงานจริง</p></div>
+      <div class="tile"><div class="t-ico">✅</div><h4>4. Commit</h4><p>สรุปการเปลี่ยนแปลงแล้ว commit (ให้ช่วยเขียน commit message ได้)</p></div>
+    </div>
+    <div class="video-embed yt-facade" data-yt="xJQuF02NAK8" data-title="The explore → plan → code → commit workflow"></div>
+    <p class="video-meta">▶ วิดีโอ: workflow หลักของ Claude Code + Plan Mode</p>
+
+    <h3>Context management — คุมหน่วยความจำการสนทนา</h3>
+    <p>มองว่า <strong>context window คือ working memory</strong> ของ Claude ทุก prompt, ไฟล์ที่อ่าน, และผลของ tool ล้วนกินพื้นที่ เมื่อใกล้เต็ม Claude จะ <strong>compact ให้อัตโนมัติ</strong> (สรุปแล้วตัดของเก่าทิ้ง) หรือคุณสั่งเองได้ด้วย <code>/compact</code> และถ้าจะเริ่มงานใหม่ที่ไม่เกี่ยวกับงานเดิมก็ <code>/clear</code> ล้างให้สะอาด</p>
+    <div class="video-embed yt-facade" data-yt="eW3oTyfeWZ0" data-title="Context management — /compact"></div>
+    <p class="video-meta">▶ วิดีโอ: context window และ /compact</p>
+
+    <h3>Code review ก่อน push</h3>
+    <p>ก่อนจะ push เป็น PR ใช้ <strong>subagent ที่เป็น read-only</strong> มารีวิวการเปลี่ยนแปลงด้วย context ที่สดและไม่มี bias ติดจากตอนเขียน นอกจากนี้ยังมี skill <code>/commit-push-pr</code> ที่ทำ commit + push + เปิด PR ให้ในขั้นตอนเดียว</p>
+
+    <h2><span class="h-ico">⚙️</span> ปรับแต่ง Claude Code ให้เข้ากับงานคุณ</h2>
+
+    <h3>CLAUDE.md — หน่วยความจำถาวรของโปรเจกต์</h3>
+    <p>ไฟล์ Markdown ชื่อ <code>CLAUDE.md</code> ที่ราก repo จะถูก <strong>อ่านอัตโนมัติทุก session</strong> มองว่าเป็น "onboarding script" ของโค้ดเบส — ใส่คำสั่ง build/test, สไตล์โค้ด, และข้อตกลงของทีมไว้ Claude จะทำงานตรงแนวทางโดยไม่ต้องบอกซ้ำ (สร้างได้ด้วย <code>/init</code>)</p>
+    <div class="video-embed yt-facade" data-yt="O0FGCxkHM-U" data-title="The CLAUDE.md file"></div>
+    <p class="video-meta">▶ วิดีโอ: CLAUDE.md = persistent project memory</p>
+
+    <h3>Subagents — ผู้ช่วยใน context แยก</h3>
+    <p>เมื่องานหนึ่งจะกิน context เยอะ (เช่น สำรวจโค้ดเบสทั้งก้อน) ให้ <strong>delegate งานนั้นไปให้ subagent</strong> ที่รันใน context window ของตัวเอง แล้วส่ง <strong>เฉพาะสรุป</strong> กลับมาที่ main thread — ช่วยให้บริบทหลักไม่รก</p>
+    <div class="video-embed yt-facade" data-yt="jKErNxuxPXg" data-title="Subagents"></div>
+    <p class="video-meta">▶ วิดีโอ: subagent รันใน context แยก</p>
+
+    <h3>Skills</h3>
+    <p>คอร์สแตะ Skills แบบสั้น ๆ แล้วชี้ให้ไปเรียนต่อในคอร์สเฉพาะ — Skills คือชุดความรู้/วิธีทำงานที่ Claude โหลดมาใช้เมื่อจำเป็น <a class="link" href="agent-skills.html">ดูคอร์ส Introduction to Agent Skills →</a></p>
+
+    <h3>MCP</h3>
+    <p><strong>MCP (Model Context Protocol)</strong> เป็น open standard ที่เชื่อม Claude Code เข้ากับ tools/data ภายนอก เช่น ฐานข้อมูล แอป หรือ repo (ตัวอย่างคือ Linear) ทำให้ Claude ทำงานกับระบบจริงขององค์กรได้</p>
+    <div class="video-embed yt-facade" data-yt="kkBFmwkDzdo" data-title="MCP in Claude Code"></div>
+    <p class="video-meta">▶ วิดีโอ: MCP เชื่อม Claude Code กับ tools/data ภายนอก</p>
+
+    <h3>Hooks</h3>
+    <p><strong>Hooks</strong> คือคำสั่งที่ตั้งให้รันในจุดต่าง ๆ ของ lifecycle จุดเด่นคือ <strong>deterministic — รันแน่นอนทุกครั้ง</strong> (ต่างจากการพึ่งให้โมเดล "จำ" ทำเอง) ใช้ทำงานอย่าง auto-format, logging หรือบล็อกงานอันตราย ตั้งค่าในไฟล์ <code>settings.json</code></p>
+    <div class="video-embed yt-facade" data-yt="IkaPHiMDazM" data-title="Hooks"></div>
+    <p class="video-meta">▶ วิดีโอ: hooks = deterministic รันแน่นอนทุกครั้ง</p>
+
+    <h2><span class="h-ico">⌨️</span> คำสั่ง/คีย์ที่ใช้บ่อย</h2>
+    <div class="table-wrap">
+      <table class="ref">
+        <thead><tr><th>คำสั่ง / คีย์</th><th>ทำอะไร</th></tr></thead>
+        <tbody>
+          <tr><td><code>/init</code></td><td>สร้างไฟล์ <code>CLAUDE.md</code> สรุปบริบทโปรเจกต์</td></tr>
+          <tr><td><code>/compact</code></td><td>สรุปและบีบ context ด้วยตัวเอง (ก่อนจะเต็ม)</td></tr>
+          <tr><td><code>/clear</code></td><td>ล้างบริบทบทสนทนา เริ่มงานใหม่</td></tr>
+          <tr><td><code>/commit-push-pr</code></td><td>commit + push + เปิด PR ในขั้นเดียว</td></tr>
+          <tr><td><code>Shift+Tab</code></td><td>สลับโหมด (Plan Mode / Auto-Accept / Approval)</td></tr>
+          <tr><td><code>Esc</code></td><td>หยุด Claude กลางคันเพื่อ redirect</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="takeaways">
+      <h3>🎯 สรุปใจความสำคัญ</h3>
+      <ul>
+        <li>Claude Code เป็น coding agent ที่ลงมือทำจริง (อ่าน/แก้ไฟล์ รันคำสั่ง) ไม่ใช่แค่ autocomplete</li>
+        <li>ทำงานเป็น agentic loop: รวบรวม context → ลงมือ → วนซ้ำ</li>
+        <li>Workflow ทองคำคือ <strong>Explore → Plan → Code → Commit</strong> — แยกวางแผนออกจากลงมือ</li>
+        <li>คุม context ด้วย <code>/compact</code> & <code>/clear</code>; ให้บริบทถาวรด้วย <code>CLAUDE.md</code> (<code>/init</code>)</li>
+        <li>ปรับแต่งต่อยอดด้วย Subagents (context แยก), Skills, MCP (เชื่อมภายนอก) และ Hooks (รันแน่นอนทุกครั้ง)</li>
+      </ul>
+    </div>
+
+    <div id="quiz-mount"></div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script>
+    window.QUIZ = [
+      { q: "Workflow หลักที่คอร์สนี้แนะนำสำหรับ Claude Code คืออะไร?",
+        opts: ["Plan → Test → Deploy", "Explore → Plan → Code → Commit", "Read → Write → Run", "Ask → Answer → Close"],
+        answer: 1, explain: "หัวใจคือ Explore → Plan → Code → Commit ซึ่งช่วยให้ผลงานแม่นยำและตรวจสอบได้" },
+      { q: "agentic loop ของ Claude Code ทำงานอย่างไร?",
+        opts: ["ตอบคำถามครั้งเดียวแล้วจบ", "ป้อน prompt → รวบรวม context → ลงมือ → วนซ้ำจนเสร็จ", "รันเทสต์อย่างเดียว", "เติมโค้ดทีละบรรทัด"],
+        answer: 1, explain: "มันวนรอบ: รวบรวมบริบท คุยกับโมเดล ลงมือทำผ่าน tools แล้ววนซ้ำจนงานเสร็จ" },
+      { q: "ไฟล์ CLAUDE.md มีไว้ทำอะไร?",
+        opts: ["เก็บรหัสผ่าน API", "บันทึกบริบทโปรเจกต์ (คำสั่ง build/test, สไตล์โค้ด) ให้ Claude อ่านอัตโนมัติทุก session", "เป็นไฟล์ผลลัพธ์ที่ Claude สร้าง", "ตั้งค่าธีมสี"],
+        answer: 1, explain: "CLAUDE.md ที่ราก repo ถูกอ่านอัตโนมัติ ใช้ให้ Claude จำบริบทและทำงานตรงแนวทางทีม" },
+      { q: "เมื่อ context ใกล้เต็ม Claude Code จะทำอะไร และเราสั่งเองได้ด้วยคำสั่งใด?",
+        opts: ["ปิดโปรแกรม / -", "compact อัตโนมัติ และสั่งเองได้ด้วย /compact", "ลบไฟล์ / /delete", "หยุดทำงาน / Esc"],
+        answer: 1, explain: "context window คือ working memory เมื่อใกล้เต็มจะ compact อัตโนมัติ หรือสั่งเองด้วย /compact" },
+      { q: "จุดเด่นของ Hooks ในคอร์สนี้คืออะไร?",
+        opts: ["เร็วกว่าปกติ", "deterministic — รันแน่นอนทุกครั้งในจุดของ lifecycle", "เขียนโค้ดแทนเราทั้งหมด", "ใช้แทน CLAUDE.md"],
+        answer: 1, explain: "Hooks รันคำสั่งในจุดต่าง ๆ ของ lifecycle อย่างแน่นอนทุกครั้ง เหมาะกับ auto-format/logging/บล็อกงานอันตราย" },
+      { q: "ทำไมจึงใช้ subagent มารีวิวโค้ดก่อน push?",
+        opts: ["เพราะเร็วกว่า", "เพราะรันใน context แยกที่สดและไม่มี bias แล้วส่งสรุปกลับ", "เพราะ subagent แก้โค้ดให้ด้วย", "เพราะไม่ต้องใช้ CLAUDE.md"],
+        answer: 1, explain: "subagent ทำงานใน context window แยก จึงรีวิวด้วยมุมมองสดและส่งเฉพาะสรุปกลับ main thread" },
+    ];
+  </script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>
