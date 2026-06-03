@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: Skills &amp; Plugins Install Guide — ติดตั้ง Plugin ครั้งเดียว Claude ทำตามทุก Session — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: ติดตั้ง andrej-karpathy-skills และ pordee เพื่อให้ Claude เขียนโค้ดมีวินัยและตอบภาษาไทยกระชับอัตโนมัติ ไม่ต้องพิมซ้ำทุก session">
+  <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
+</head>
+<body data-course="case-skills-plugins" data-page="course">
+  <article class="prose" id="article">
+    <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>Skills &amp; Plugins</span></div>
+
+    <header class="course-hero">
+      <span class="eyebrow">🏗️ Case Studies · เคส 21</span>
+      <h1>Case Study: Skills &amp; Plugins Install Guide<br>ตั้งกฎให้ Claude ครั้งเดียว — ทุก session ทำตามอัตโนมัติ</h1>
+      <p class="lead">โจทย์: ต้องพิมสั่ง Claude ซ้ำทุก session ใหม่ว่า "ตอบสั้น อย่าแก้โค้ดที่ไม่ได้ขอ" — แก้ด้วยการติดตั้ง <b>Plugin</b> ครั้งเดียวให้ Claude ทำตามกฎอัตโนมัติตลอดไป</p>
+      <div class="meta-row"><span>🎯 ใช้กับ Claude Code CLI</span><span>🧩 อิงคอร์ส <a class="link" href="agent-skills.html">Introduction to Agent Skills</a> และ <a class="link" href="claude-cowork.html">Introduction to Claude Cowork</a></span><span>📋 step-by-step</span></div>
+    </header>
+
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> Skills &amp; Plugins คือวิธีฝัง "กฎส่วนตัวหรือกฎของโปรเจกต์" เข้าไปใน Claude Code ถาวร ไม่ต้องพิมซ้ำ เคสนี้ติดตั้ง 2 plugin: <strong>andrej-karpathy-skills</strong> (วินัยการเขียนโค้ด) และ <strong>pordee</strong> (ตอบภาษาไทยกระชับ)</div></div>
+
+    <!-- STEP 1 -->
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <h3 id="s1">ทำความเข้าใจก่อนลง — ลงแล้วดียังไง</h3>
+      <p>ก่อนลง ลองดูปัญหาที่คนใช้ Claude Code เจอบ่อย:</p>
+      <div class="callout warn"><div class="c-ico">⚠️</div><div class="c-body">
+        <strong>ปัญหาก่อนลง Plugin</strong>
+        <ul style="margin-top:8px;padding-left:18px;font-size:.92rem;line-height:2;">
+          <li>Claude เขียนโค้ดเยอะเกิน แก้ไขส่วนที่ <strong>ไม่ได้ขอ</strong></li>
+          <li>ตอบยาวมีคำสุภาพเต็มไปหมด: "แน่นอนครับ ยินดีช่วยเลยครับ"</li>
+          <li>ต้องพิมสั่งซ้ำ <strong>ทุก session ใหม่</strong> ว่า "ตอบสั้นๆ ภาษาไทย"</li>
+          <li>เริ่มเขียนโค้ดเลยโดยไม่บอก assumption ก่อน</li>
+        </ul>
+      </div></div>
+
+      <h4 style="margin:22px 0 12px;font-size:1rem;font-weight:600;">ก่อน / หลัง ติดตั้ง Plugin</h4>
+      <div class="grid cols-2">
+        <div class="tile" style="border-left:4px solid #c0564b;">
+          <div class="t-ico" style="font-size:1.4rem;margin-bottom:8px;">❌</div>
+          <h4>ก่อนลง Plugin</h4>
+          <ul style="font-size:.9rem;color:var(--fg-muted);padding-left:16px;margin:8px 0 0;line-height:2;">
+            <li>พิมทุก session: "ตอบสั้นๆ ภาษาไทย"</li>
+            <li>Claude แก้โค้ดส่วนที่ไม่ได้ขอ</li>
+            <li>ตอบยาวมีคำว่า "แน่นอนครับ ยินดีช่วย"</li>
+            <li>เขียน 500 บรรทัดทั้งที่ 50 พอ</li>
+          </ul>
+        </div>
+        <div class="tile" style="border-left:4px solid var(--green);">
+          <div class="t-ico" style="font-size:1.4rem;margin-bottom:8px;">✅</div>
+          <h4>หลังลง Plugin</h4>
+          <ul style="font-size:.9rem;color:var(--fg-muted);padding-left:16px;margin:8px 0 0;line-height:2;">
+            <li>Claude ตอบภาษาไทยกระชับ <strong>อัตโนมัติ</strong></li>
+            <li>แตะเฉพาะโค้ดที่ขอ ไม่ยุ่งส่วนอื่น</li>
+            <li>ประหยัด token 60–80%</li>
+            <li>คิดก่อนโค้ด ไม่เดาสุ่ม บอก assumption</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="margin:22px 0 12px;font-size:1rem;font-weight:600;">ตัวอย่าง 3 สถานการณ์</h4>
+      <div class="table-wrap">
+        <table class="ref">
+          <thead>
+            <tr><th>สถานการณ์</th><th>ก่อนลง</th><th>หลังลง</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>แก้ bug</strong></td>
+              <td>แก้ bug + refactor ข้างๆ + เพิ่ม feature ที่ไม่ได้ขอ</td>
+              <td>แตะบรรทัดนั้นอย่างเดียว</td>
+            </tr>
+            <tr>
+              <td><strong>ถามภาษาไทย</strong></td>
+              <td>"แน่นอนครับผมยินดีช่วยเหลือคุณ..."</td>
+              <td>"Object ref ใหม่ทุก render. ห่อด้วย useMemo."</td>
+            </tr>
+            <tr>
+              <td><strong>สร้าง feature</strong></td>
+              <td>เริ่มโค้ดเลยโดยไม่ถาม</td>
+              <td>บอก assumption ก่อน ถามถ้าไม่ชัด แล้วค่อยโค้ด</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout result"><div class="c-ico">💡</div><div class="c-body"><strong>Skills &amp; Plugins = ตั้งกฎให้ Claude ครั้งเดียว ทุก session ทำตามอัตโนมัติ</strong></div></div>
+
+      <h4 style="margin:22px 0 12px;font-size:1rem;font-weight:600;">Skills vs Plugins ต่างกันยังไง</h4>
+      <div class="table-wrap">
+        <table class="ref">
+          <thead>
+            <tr><th></th><th>Skills</th><th>Plugins</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>รูปแบบ</strong></td><td>ไฟล์ <code>.md</code> เดียว</td><td>แพ็กเกจรวม (หลายไฟล์)</td></tr>
+            <tr><td><strong>ติดตั้ง</strong></td><td>สร้างเองหรือมาใน Plugin</td><td><code>/plugin install</code></td></tr>
+            <tr><td><strong>ตัวอย่าง</strong></td><td>SKILL.md สำหรับแปลง Word/PDF</td><td>pordee, karpathy-skills</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div></div>
+
+    <!-- STEP 2 -->
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <h3 id="s2">Plugin ที่ใช้ใน Case Study นี้</h3>
+      <p>เคสนี้ใช้ 2 plugin ที่ติดตั้งครั้งเดียวแล้วใช้ได้ทุกโปรเจกต์:</p>
+      <div class="grid cols-2" style="margin-top:16px;">
+        <div class="tile">
+          <div class="t-ico" style="font-size:1.4rem;margin-bottom:8px;">⚙️</div>
+          <h4>andrej-karpathy-skills</h4>
+          <p style="font-size:.82rem;margin-bottom:10px;"><a class="link" href="https://github.com/multica-ai/andrej-karpathy-skills" target="_blank" rel="noopener">github.com/multica-ai/andrej-karpathy-skills</a> · ⭐ 165k</p>
+          <p style="font-size:.9rem;"><strong>ทำอะไร:</strong> บังคับให้ Claude เขียนโค้ดมีวินัย 4 หลักการ:</p>
+          <ul style="font-size:.9rem;color:var(--fg-muted);padding-left:16px;margin:8px 0 0;line-height:2;">
+            <li><strong>Think Before Coding</strong> — คิดก่อนเขียน</li>
+            <li><strong>Simplicity First</strong> — เรียบง่ายไว้ก่อน</li>
+            <li><strong>Surgical Changes</strong> — แตะเฉพาะส่วนที่ขอ</li>
+            <li><strong>Goal-Driven Execution</strong> — ทำตามเป้า ไม่เกิน</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <div class="t-ico" style="font-size:1.4rem;margin-bottom:8px;">🇹🇭</div>
+          <h4>pordee</h4>
+          <p style="font-size:.82rem;margin-bottom:10px;"><a class="link" href="https://github.com/kerlos/pordee" target="_blank" rel="noopener">github.com/kerlos/pordee</a></p>
+          <p style="font-size:.9rem;"><strong>ทำอะไร:</strong> Claude ตอบภาษาไทยกระชับ ประหยัด token 60–80%</p>
+          <p style="margin-top:10px;font-size:.9rem;font-weight:600;">Commands:</p>
+          <ul style="font-size:.9rem;color:var(--fg-muted);padding-left:16px;margin:6px 0 0;line-height:2;">
+            <li><code>/pordee</code> หรือ <code>/pordee full</code> — เปิด full mode</li>
+            <li><code>/pordee lite</code> — เปิด lite mode</li>
+            <li><code>/pordee stop</code> — ปิด</li>
+            <li>Keyword: พิม <strong>"พอดี"</strong> เปิด · <strong>"หยุดพอดี"</strong> ปิด</li>
+          </ul>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- STEP 3 -->
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <h3 id="s3">Global vs Project Scope — เรื่องที่คนมักสับสน</h3>
+      <p>ก่อนลง plugin ต้องตัดสินใจว่าอยากใช้แค่โปรเจกต์เดียวหรืออยากใช้ทุกที่ เพราะตำแหน่งที่วางไฟล์จะต่างกัน</p>
+
+      <pre><code><span class="cmt"># โครงสร้างโฟลเดอร์ที่ plugin ไปวางตัว</span>
+C:\Users\Admin\
+├── .claude\                    <span class="cmt">← USER SCOPE (ทุก project)</span>
+│   ├── CLAUDE.md
+│   └── plugins\
+│       ├── andrej-karpathy-skills\
+│       └── pordee\
+└── myproject\                  <span class="cmt">← PROJECT SCOPE</span>
+    └── .claude\
+        └── CLAUDE.md           <span class="cmt">← กฎเฉพาะโปรเจกต์นี้</span></code></pre>
+
+      <div class="table-wrap" style="margin-top:18px;">
+        <table class="ref">
+          <thead>
+            <tr><th>Scope</th><th>ชื่อในหน้า install</th><th>ใช้ได้กับ</th><th>เหมาะกับ</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>User</strong></td>
+              <td>Install for you (user scope)</td>
+              <td>ทุก project</td>
+              <td>Plugin ส่วนตัว</td>
+            </tr>
+            <tr>
+              <td><strong>Project</strong></td>
+              <td>Install for all collaborators</td>
+              <td>โปรเจกต์นี้ + ทีม</td>
+              <td>กฎของทีม</td>
+            </tr>
+            <tr>
+              <td><strong>Local</strong></td>
+              <td>Install for you, in this repo only</td>
+              <td>โปรเจกต์นี้คนเดียว</td>
+              <td>ทดลองก่อนแชร์</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid cols-3" style="margin-top:18px;">
+        <div class="callout tip" style="margin:0;"><div class="c-ico">🌍</div><div class="c-body"><strong>USER SCOPE</strong><br><span style="font-size:.88rem;">เปิด CMD ที่ไหนก็ได้ plugin ติดมาเสมอ</span></div></div>
+        <div class="callout info" style="margin:0;"><div class="c-ico">📁</div><div class="c-body"><strong>PROJECT SCOPE</strong><br><span style="font-size:.88rem;">ต้องเปิด CMD ในโฟลเดอร์โปรเจกต์</span></div></div>
+        <div class="callout warn" style="margin:0;"><div class="c-ico">🔒</div><div class="c-body"><strong>LOCAL SCOPE</strong><br><span style="font-size:.88rem;">เหมือน project แต่ไม่ commit ขึ้น git</span></div></div>
+      </div>
+
+      <div class="callout key" style="margin-top:16px;"><div class="c-ico">🤔</div><div class="c-body">
+        <strong>คำถามช่วยตัดสินใจ</strong><br>
+        อยากใช้ทุก project? → เลือก <strong>User scope</strong><br>
+        อยากใช้แค่โปรเจกต์เดียว? → เลือก <strong>Project</strong> หรือ <strong>Local scope</strong>
+      </div></div>
+    </div></div>
+
+    <!-- STEP 4 -->
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <h3 id="s4">วิธีติดตั้ง Step by Step</h3>
+      <p>Plugin ติดตั้งผ่าน Claude Code CLI โดยใช้คำสั่ง <code>/plugin install</code> — ต้องมี Node.js และ Claude Code พร้อมก่อนถึงจะลงได้</p>
+
+      <p style="margin-top:18px;font-weight:600;">1. ติดตั้ง Node.js</p>
+      <pre><code><span class="cmt"># ดาวน์โหลดจาก nodejs.org แล้ว install ตามปกติ</span>
+<span class="cmt"># ตรวจว่าได้แล้ว:</span>
+node --version</code></pre>
+
+      <p style="margin-top:18px;font-weight:600;">2. ติดตั้ง Claude Code CLI</p>
+      <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+
+      <p style="margin-top:18px;font-weight:600;">3. เปิด CMD แล้วรัน Claude Code</p>
+      <pre><code>claude</code></pre>
+      <p>กด Enter เพื่อ trust folder เมื่อถูกถาม รอจนพร้อมใช้งาน</p>
+
+      <p style="margin-top:18px;font-weight:600;">4. เพิ่ม andrej-karpathy-skills เข้า marketplace แล้วลง</p>
+      <pre><code>/plugin marketplace add forrestchang/andrej-karpathy-skills
+/plugin install andrej-karpathy-skills@karpathy-skills</code></pre>
+
+      <p style="margin-top:18px;font-weight:600;">5. เพิ่ม pordee เข้า marketplace แล้วลง</p>
+      <pre><code>/plugin marketplace add kerlos/pordee
+/plugin install pordee@pordee</code></pre>
+
+      <p style="margin-top:18px;font-weight:600;">6. เลือก Scope เมื่อถูกถาม</p>
+      <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">เลือก <strong>"Install for you (user scope)"</strong> เพื่อใช้ได้ทุกโปรเจกต์โดยไม่ต้องลงซ้ำ</div></div>
+
+      <p style="margin-top:18px;font-weight:600;">7. ตรวจสอบว่าลงครบ</p>
+      <pre><code>/plugin list</code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">เห็น <code>andrej-karpathy-skills</code> และ <code>pordee</code> ใน list = ลงสำเร็จ</div></div>
+    </div></div>
+
+    <!-- STEP 5 -->
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <h3 id="s5">หลังลงแล้ว — ไฟล์อยู่ที่ไหน</h3>
+      <p>Plugin ที่ลง user scope จะไปวางในโฟลเดอร์ <code>.claude</code> ของ user ซึ่งเป็น <strong>โฟลเดอร์ซ่อน</strong> ต้องเปิด show hidden files ถึงจะเห็น</p>
+
+      <pre><code>C:\Users\Admin\.claude\         <span class="cmt">← โฟลเดอร์ซ่อน (File Explorer: View → Hidden items)</span>
+├── plugins\
+│   ├── andrej-karpathy-skills\
+│   └── pordee\
+└── skills\                     <span class="cmt">← skills ที่สร้างเองวางที่นี่</span></code></pre>
+
+      <p>เปิดดูโฟลเดอร์ได้ทันทีด้วย:</p>
+      <pre><code>explorer C:\Users\Admin\.claude</code></pre>
+    </div></div>
+
+    <!-- STEP 6 -->
+    <div class="step"><div class="step-num">6</div><div class="step-body">
+      <h3 id="s6">Tips &amp; Commands</h3>
+      <p>Commands ที่ใช้บ่อยสำหรับจัดการ plugin:</p>
+
+      <pre><code><span class="cmt"># ดู plugin ที่ลงไว้ทั้งหมด</span>
+/plugin list</code></pre>
+
+      <pre><code><span class="cmt"># ลบ plugin ที่ไม่ต้องการ</span>
+/plugin remove [ชื่อ-plugin]</code></pre>
+
+      <pre><code><span class="cmt"># อัปเดต Claude Code เป็น version ล่าสุด</span>
+npm update -g @anthropic-ai/claude-code</code></pre>
+
+      <pre><code><span class="cmt"># ล้างเฉพาะ plugins (เก็บ skills/settings ไว้)</span>
+rmdir /s /q C:\Users\Admin\.claude\plugins</code></pre>
+
+      <pre><code><span class="cmt"># ล้างทุกอย่างใน .claude (reset หมด)</span>
+rmdir /s /q C:\Users\Admin\.claude</code></pre>
+
+      <div class="callout warn"><div class="c-ico">⚠️</div><div class="c-body"><strong>ระวัง:</strong> <code>rmdir /s /q .claude</code> ลบ <strong>ทุกอย่าง</strong> รวม CLAUDE.md ส่วนตัว skills และ settings — ใช้เฉพาะตอน reset จริงๆ</div></div>
+    </div></div>
+
+    <div class="takeaways">
+      <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
+      <ul>
+        <li>Plugin ติดตั้งครั้งเดียว — Claude ทำตามกฎอัตโนมัติทุก session ไม่ต้องพิมซ้ำ</li>
+        <li>เลือก <strong>User scope</strong> เมื่ออยากใช้ทุกโปรเจกต์, <strong>Project scope</strong> เมื่ออยากแชร์ทีม</li>
+        <li>karpathy-skills: โค้ดมีวินัย — Think Before Coding / Simplicity / Surgical / Goal-Driven</li>
+        <li>pordee: ตอบไทยกระชับ ประหยัด token 60–80%, เปิด/ปิดได้ทันทีด้วย keyword</li>
+        <li>ไฟล์อยู่ที่ <code>C:\Users\Admin\.claude\plugins\</code> (โฟลเดอร์ซ่อน)</li>
+      </ul>
+    </div>
+  </article>
+
+  <script src="../assets/js/courses-data.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

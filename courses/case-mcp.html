@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Case Study: MCP — ต่อ Claude เข้ากับข้อมูลภายนอก step by step — Anthropic Academy (ภาษาไทย)</title>
-  <meta name="description" content="Case study ลงมือทำจริง: สร้าง MCP server ด้วย Python SDK แล้วต่อเข้ากับ Claude Code เพื่อให้เข้าถึง tools/data ของเราเอง">
+  <title>Case Study: MCP — ให้ Claude ตัดต่อวิดีโอผ่าน MCP step by step — Anthropic Academy (ภาษาไทย)</title>
+  <meta name="description" content="Case study ลงมือทำจริง: ต่อ Claude Code เข้ากับ DaVinci Resolve ผ่าน MCP server แล้วสั่งให้ตัดต่อ ใส่ subtitle ปรับสี export ได้เลย">
   <script>try{var t=localStorage.getItem("aa_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23cc785c'/><g stroke='white' stroke-width='8' stroke-linecap='round'><line x1='50' y1='50' x2='90' y2='50'/><line x1='50' y1='50' x2='77.7' y2='34'/><line x1='50' y1='50' x2='70' y2='15.4'/><line x1='50' y1='50' x2='50' y2='18'/><line x1='50' y1='50' x2='30' y2='15.4'/><line x1='50' y1='50' x2='22.3' y2='34'/><line x1='50' y1='50' x2='10' y2='50'/><line x1='50' y1='50' x2='22.3' y2='66'/><line x1='50' y1='50' x2='30' y2='84.6'/><line x1='50' y1='50' x2='50' y2='82'/><line x1='50' y1='50' x2='70' y2='84.6'/><line x1='50' y1='50' x2='77.7' y2='66'/></g></svg>">
@@ -14,67 +14,134 @@
     <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>MCP</span></div>
 
     <header class="course-hero">
-      <span class="eyebrow">🏗️ Case Studies · เคส 25</span>
-      <h1>Case Study: MCP<br>ต่อ Claude เข้ากับข้อมูล/เครื่องมือของเราเอง</h1>
-      <p class="lead">โจทย์: อยากให้ Claude เข้าถึง "ฐานความรู้ภายใน" ของทีม (เช่น คลังบทความ) — สร้าง <b>MCP server</b> เล็ก ๆ แล้วต่อเข้ากับ Claude Code</p>
-      <div class="meta-row"><span>🎯 Python SDK</span><span>🧩 อิงคอร์ส <a class="link" href="mcp-intro.html">Introduction to MCP</a></span><span>📋 step-by-step</span></div>
+      <span class="eyebrow">🏗️ Case Studies · เคส 26</span>
+      <h1>Case Study: MCP<br>ให้ Claude ตัดต่อวิดีโอผ่าน DaVinci Resolve</h1>
+      <p class="lead">โจทย์: มีคลิปดิบหลายไฟล์ อยากให้ Claude <b>ตัดต่อ ใส่ subtitle ปรับสี export</b> ได้โดยตรง — ทำได้ด้วยการต่อ Claude Code เข้ากับ DaVinci Resolve ผ่าน MCP server</p>
+      <div class="meta-row"><span>🎯 ใช้กับ Claude Code</span><span>🧩 อิงคอร์ส <a class="link" href="mcp-intro.html">Introduction to MCP</a></span><span>📋 step-by-step</span></div>
     </header>
 
-    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> MCP เป็น communication layer มาตรฐานที่ทำให้ต่อ tools/data ภายนอกได้โดยไม่ต้องเขียน integration เองทุกครั้ง เราจะสร้าง server ที่ expose <strong>tool</strong> ค้นบทความ และ <strong>resource</strong> ดึงเนื้อหา</div></div>
+    <div class="callout info"><div class="c-ico">🧭</div><div class="c-body"><strong>สถานการณ์</strong> MCP server คือสะพานที่ expose ความสามารถของโปรแกรมภายนอก (เช่น DaVinci Resolve) ให้ Claude เรียกใช้ได้ผ่าน tools มาตรฐาน — ผู้ใช้ทั่วไป <strong>ไม่ต้องสร้าง server เอง</strong> แค่เพิ่มเข้า Claude Code แล้วสั่งงานได้เลย</div></div>
 
     <div class="step"><div class="step-num">1</div><div class="step-body">
-      <h3 id="s1">ตั้งโปรเจกต์ + ติดตั้ง MCP SDK</h3>
-      <pre><code>uv init my-mcp-server &amp;&amp; cd my-mcp-server
-uv add "mcp[cli]"</code></pre>
+      <h3 id="s1">ทำความเข้าใจ: MCP ในมุมผู้ใช้</h3>
+      <p>ก่อนลงมือ ดูว่า pieces ทั้งหมดวางตัวยังไง:</p>
+      <pre><code><span class="cmt"># ภาพรวม flow</span>
+คุณพิม prompt
+    ↓
+Claude Code
+    ↓ (MCP protocol)
+DaVinci Resolve MCP Server   <span class="cmt">← สะพาน</span>
+    ↓ (Lua scripting API)
+DaVinci Resolve              <span class="cmt">← โปรแกรมทำงานจริง</span></code></pre>
+      <p>Claude ไม่ได้ "เห็น" วิดีโอโดยตรง แต่สั่งงานผ่าน tools ที่ MCP server expose ออกมา เช่น <code>import_clip</code>, <code>add_subtitle</code>, <code>export_timeline</code></p>
+      <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">MCP server สำหรับโปรแกรมยอดนิยมมักมีคนทำไว้แล้ว — ค้นหา <code>[ชื่อโปรแกรม] MCP server</code> ใน GitHub ก่อนสร้างเอง</div></div>
     </div></div>
 
     <div class="step"><div class="step-num">2</div><div class="step-body">
-      <h3 id="s2">นิยาม tool ด้วย decorator</h3>
-      <p><strong>ทำไม:</strong> Python SDK ใช้ decorator ทำให้นิยาม tool ได้สั้น ๆ — Claude จะเห็นชื่อ/คำอธิบายแล้วเรียกใช้เมื่อเหมาะ</p>
-      <pre><code><span class="cmt"># server.py</span>
-from mcp.server.fastmcp import FastMCP
-mcp = FastMCP("kb")
-
-@mcp.tool()
-def search_articles(keyword: str) -> list[str]:
-    """ค้นบทความในคลังความรู้จาก keyword"""
-    return kb_search(keyword)   <span class="cmt"># ฟังก์ชันจริงของเรา</span>
-
-if __name__ == "__main__":
-    mcp.run()</code></pre>
+      <h3 id="s2">เตรียม DaVinci Resolve + MCP Server</h3>
+      <p>ต้องมีสองอย่างพร้อมกัน:</p>
+      <div class="grid cols-2">
+        <div class="tile">
+          <div class="t-ico" style="font-size:1.3rem;margin-bottom:8px;">🎬</div>
+          <h4>DaVinci Resolve</h4>
+          <p>ติดตั้งและเปิดค้างไว้ก่อนเสมอ เพราะ MCP server จะเชื่อมผ่าน scripting API ที่รันอยู่</p>
+          <p style="font-size:.85rem;margin-top:8px;color:var(--fg-muted);">ใช้ได้ทั้ง Free และ Studio edition</p>
+        </div>
+        <div class="tile">
+          <div class="t-ico" style="font-size:1.3rem;margin-bottom:8px;">🔌</div>
+          <h4>DaVinci Resolve MCP Server</h4>
+          <p>ติดตั้ง package ที่ทำหน้าที่เป็นสะพาน:</p>
+          <pre style="margin:8px 0 0;font-size:.82rem;"><code>pip install davinci-resolve-mcp</code></pre>
+        </div>
+      </div>
+      <p style="margin-top:16px;">ใน DaVinci Resolve เปิดใช้ scripting API ที่ <strong>Preferences → System → General → Enable external scripting using local network</strong></p>
     </div></div>
 
     <div class="step"><div class="step-num">3</div><div class="step-body">
-      <h3 id="s3">เพิ่ม resource (ข้อมูลแบบอ่าน)</h3>
-      <p><strong>resource</strong> เหมือน GET handler — expose ข้อมูลให้ใส่เข้า prompt ได้ตรง ๆ</p>
-      <pre><code>@mcp.resource("article://{id}")
-def get_article(id: str) -> str:
-    """ดึงเนื้อหาบทความตาม id"""
-    return kb_get(id)</code></pre>
+      <h3 id="s3">เพิ่ม MCP server เข้า Claude Code</h3>
+      <p>บอก Claude Code ว่าจะใช้ MCP server ตัวไหน เลือกได้ 2 วิธี:</p>
+      <p style="margin-top:14px;font-weight:600;">วิธีที่ 1 — ผ่าน command line (ใช้ครั้งเดียว)</p>
+      <pre><code>claude mcp add davinci-resolve -- python -m davinci_resolve_mcp</code></pre>
+      <p style="margin-top:14px;font-weight:600;">วิธีที่ 2 — เพิ่มใน <code>.mcp.json</code> (แชร์ทีมได้)</p>
+      <pre><code><span class="cmt"># .mcp.json ในโฟลเดอร์โปรเจกต์</span>
+{
+  "mcpServers": {
+    "davinci-resolve": {
+      "command": "python",
+      "args": ["-m", "davinci_resolve_mcp"]
+    }
+  }
+}</code></pre>
+      <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">commit <code>.mcp.json</code> เข้า repo ได้เลย ทีมทุกคนจะได้ใช้ MCP server เดียวกันโดยไม่ต้อง add ซ้ำ</div></div>
     </div></div>
 
     <div class="step"><div class="step-num">4</div><div class="step-body">
-      <h3 id="s4">debug ด้วย server inspector</h3>
-      <p>ก่อนต่อกับ Claude จริง ใช้ <strong>inspector</strong> ตรวจว่า tool/resource ทำงานถูกต้องแบบ real-time</p>
-      <pre><code>uv run mcp dev server.py</code></pre>
+      <h3 id="s4">ตรวจว่าต่อติดและเห็น tools</h3>
+      <p>เปิด Claude Code แล้วพิม:</p>
+      <pre><code>/mcp</code></pre>
+      <p>ถ้าต่อสำเร็จจะเห็น <code>davinci-resolve</code> ใน list พร้อม tools ที่ expose ออกมา เช่น:</p>
+      <pre><code><span class="cmt"># ตัวอย่าง tools ที่เห็น</span>
+davinci-resolve:
+  - import_media      (นำเข้าไฟล์วิดีโอ)
+  - create_timeline   (สร้าง timeline ใหม่)
+  - add_clip          (วางคลิปบน timeline)
+  - add_subtitle      (ใส่ subtitle)
+  - apply_color_grade (ปรับสี/LUT)
+  - export_timeline   (render และ export)</code></pre>
+      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">เห็น tools ครบ = พร้อมให้ Claude สั่ง DaVinci Resolve ได้แล้ว</div></div>
     </div></div>
 
     <div class="step"><div class="step-num">5</div><div class="step-body">
-      <h3 id="s5">ต่อเข้ากับ Claude Code</h3>
-      <pre><code>claude mcp add kb -- uv run server.py
-/mcp   <span class="cmt"># ดูสถานะว่าต่อติดและเห็น tools/resources</span></code></pre>
-      <div class="callout result"><div class="c-ico">✅</div><div class="c-body">ถามว่า "หาบทความเรื่อง onboarding ให้หน่อย" แล้ว Claude เรียก <code>search_articles</code> ผ่าน MCP server ของเราได้เลย</div></div>
+      <h3 id="s5">สั่ง Claude ตัดต่อวิดีโอ</h3>
+      <p>สั่งเป็นเป้าหมายระดับงาน Claude จะวางแผนและเรียก tools ให้เอง:</p>
+
+      <div class="prompt-box">
+        <div class="pb-head"><span>🎬</span> ตัดต่อพื้นฐาน</div>
+        <pre><code>ใน DaVinci Resolve:
+1. นำเข้าไฟล์คลิปทั้งหมดใน /Videos/raw/
+2. สร้าง timeline ชื่อ "highlight-reel" 1920x1080 24fps
+3. เรียงคลิปตามลำดับชื่อไฟล์ ตัดให้เหลือเฉพาะช่วง 0:10–0:40 ของแต่ละคลิป
+4. export เป็น MP4 H.264 ไว้ที่ /Videos/output/</code></pre>
+      </div>
+
+      <div class="prompt-box" style="margin-top:14px;">
+        <div class="pb-head"><span>📝</span> ใส่ subtitle จากไฟล์ script</div>
+        <pre><code>อ่านไฟล์ script.txt แล้วใส่ subtitle ลงใน timeline "highlight-reel"
+จัดเวลาให้ตรงกับช่วงที่คลิปแต่ละตัวเล่น
+ใช้ฟอนต์ Sarabun ขนาด 36 สีขาว outline ดำ</code></pre>
+      </div>
+
+      <div class="prompt-box" style="margin-top:14px;">
+        <div class="pb-head"><span>🎨</span> ปรับสีทั้ง timeline</div>
+        <pre><code>ปรับสีคลิปทุกตัวใน timeline ให้โทนสีอุ่น
+เพิ่ม contrast เล็กน้อย แล้ว apply LUT "Cinematic Warm" ถ้ามีใน library</code></pre>
+      </div>
     </div></div>
 
-    <div class="callout tip"><div class="c-ico">💡</div><div class="c-body">แชร์ทั้งทีมด้วย project scope ใน <code>.mcp.json</code> (commit ได้); สำหรับ server ระยะไกลใช้ StreamableHTTP transport · syntax ล่าสุดที่ <a class="link" href="https://modelcontextprotocol.io" target="_blank" rel="noopener">modelcontextprotocol.io</a></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body">
+      <h3 id="s6">MCP server ของโปรแกรมอื่น ๆ</h3>
+      <p>pattern เดียวกันนี้ใช้ได้กับโปรแกรมใดก็ได้ที่มี MCP server:</p>
+      <div class="table-wrap">
+        <table class="ref">
+          <thead><tr><th>โปรแกรม</th><th>MCP Server</th><th>ทำอะไรได้</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Blender</strong></td><td><code>blender-mcp</code></td><td>สร้าง 3D object ปรับ material render scene</td></tr>
+            <tr><td><strong>Figma</strong></td><td><code>figma-mcp</code></td><td>อ่าน/สร้าง component ดึง design token</td></tr>
+            <tr><td><strong>Premiere Pro</strong></td><td>ผ่าน ExtendScript + MCP wrapper</td><td>ตัดต่อ ใส่ effect export</td></tr>
+            <tr><td><strong>ffmpeg</strong></td><td><code>ffmpeg-mcp</code></td><td>transcode trim merge ไม่ต้องเปิด GUI</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warn"><div class="c-ico">⚠️</div><div class="c-body">MCP server จากบุคคลที่สาม ตรวจ source code ก่อนรัน เพราะ server ทำงานในเครื่องและเข้าถึงโปรแกรมของเราได้</div></div>
+    </div></div>
 
     <div class="takeaways">
       <h3>🎯 สิ่งที่ได้จากเคสนี้</h3>
       <ul>
-        <li>MCP server expose ได้ทั้ง tools (ฟังก์ชัน) และ resources (ข้อมูลแบบอ่าน)</li>
-        <li>Python SDK + decorator ทำให้นิยามได้สั้น</li>
-        <li>debug ด้วย inspector ก่อน แล้วต่อด้วย <code>claude mcp add</code></li>
-        <li>แชร์ทีมผ่าน <code>.mcp.json</code> (project scope)</li>
+        <li>MCP server = สะพาน Claude ↔ โปรแกรมภายนอก ไม่ต้องสร้าง integration เอง</li>
+        <li>เพิ่มด้วย <code>claude mcp add</code> หรือ <code>.mcp.json</code> (commit แชร์ทีมได้)</li>
+        <li>สั่งเป็นเป้าหมาย Claude จะวางแผนและเรียก tools ให้เอง</li>
+        <li>pattern เดียวกันใช้ได้กับ Blender, Figma, ffmpeg และโปรแกรมอื่นที่มี MCP server</li>
       </ul>
     </div>
   </article>

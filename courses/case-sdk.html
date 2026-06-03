@@ -14,7 +14,7 @@
     <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>SDK</span></div>
 
     <header class="course-hero">
-      <span class="eyebrow">🏗️ Case Studies · เคส 23</span>
+      <span class="eyebrow">🏗️ Case Studies · เคส 24</span>
       <h1>Case Study: Agent SDK<br>รัน Claude Code แบบ programmatic</h1>
       <p class="lead">โจทย์: อยากให้ "ตัวช่วยเขียนโค้ด" ทำงานอัตโนมัติในสคริปต์/CI ของเรา ไม่ใช่พิมพ์มือใน terminal — ใช้ <b>Agent SDK</b> ที่ใช้ agent loop เดียวกับ Claude Code</p>
       <div class="meta-row"><span>🎯 TypeScript / Python</span><span>🧩 อิงคอร์ส <a class="link" href="claude-code-in-action.html">Claude Code in Action</a></span><span>📋 step-by-step</span></div>
@@ -33,7 +33,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
 
     <div class="step"><div class="step-num">2</div><div class="step-body">
       <h3 id="s2">เขียนสคริปต์เรียก agent loop</h3>
-      <p><strong>ทำไม:</strong> SDK ใช้ loop เดียวกับ CLI (รวบรวม context → ลงมือผ่าน tools → วนซ้ำ) เราแค่ส่ง prompt แล้วรับผลลัพธ์มาใช้ต่อในโปรแกรม</p>
+      <p>SDK ใช้ loop เดียวกับ CLI (รวบรวม context → ลงมือผ่าน tools → วนซ้ำ) เราแค่ส่ง prompt แล้วรับผลลัพธ์มาใช้ต่อในโปรแกรม</p>
       <pre><code><span class="cmt">// gen-changelog.ts</span>
 import { query } from "@anthropic-ai/claude-agent-sdk";
 

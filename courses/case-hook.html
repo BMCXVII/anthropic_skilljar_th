@@ -14,7 +14,7 @@
     <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>Hook</span></div>
 
     <header class="course-hero">
-      <span class="eyebrow">🏗️ Case Studies · เคส 22</span>
+      <span class="eyebrow">🏗️ Case Studies · เคส 23</span>
       <h1>Case Study: Hook<br>auto-format โค้ด + บล็อกคำสั่งอันตราย</h1>
       <p class="lead">โจทย์: อยากให้โค้ดถูก format อัตโนมัติทุกครั้งที่ Claude แก้ไฟล์ และ <b>กันไม่ให้รันคำสั่งอันตราย/อ่านไฟล์ลับ</b> — ใช้ Hook ที่รันแน่นอนทุกครั้ง</p>
       <div class="meta-row"><span>🎯 ใช้กับ Claude Code</span><span>🧩 อิงคอร์ส <a class="link" href="claude-code-in-action.html">Claude Code in Action</a></span><span>📋 step-by-step</span></div>
@@ -24,7 +24,7 @@
 
     <div class="step"><div class="step-num">1</div><div class="step-body">
       <h3 id="s1">PostToolUse — format อัตโนมัติหลังแก้ไฟล์</h3>
-      <p><strong>ทำไม:</strong> ทุกครั้งที่ Claude ใช้ tool แก้ไฟล์ (Edit/Write) ให้รัน formatter ทันที โค้ดจะสม่ำเสมอโดยไม่ต้องสั่ง ตั้งค่าในไฟล์ <code>settings.json</code></p>
+      <p>ทุกครั้งที่ Claude ใช้ tool แก้ไฟล์ (Edit/Write) ให้รัน formatter ทันที โค้ดจะสม่ำเสมอโดยไม่ต้องสั่ง ตั้งค่าในไฟล์ <code>settings.json</code></p>
       <pre><code><span class="cmt"># .claude/settings.json</span>
 {
   "hooks": {
@@ -44,7 +44,7 @@
 
     <div class="step"><div class="step-num">2</div><div class="step-body">
       <h3 id="s2">PreToolUse — บล็อกก่อนทำสิ่งอันตราย</h3>
-      <p><strong>ทำไม:</strong> <code>PreToolUse</code> รัน <strong>ก่อน</strong> tool ทำงาน จึง <strong>บล็อกได้</strong> เคสนี้กันการอ่านไฟล์ความลับอย่าง <code>.env</code></p>
+      <p><code>PreToolUse</code> รัน <strong>ก่อน</strong> tool ทำงาน จึง <strong>บล็อกได้</strong> เคสนี้กันการอ่านไฟล์ความลับอย่าง <code>.env</code></p>
       <pre><code><span class="cmt"># สคริปต์รับ JSON ทาง stdin แล้วใช้ exit code บอกผล</span>
 <span class="cmt"># .claude/hooks/block-env.sh (ใช้ absolute path เสมอ)</span>
 #!/usr/bin/env bash

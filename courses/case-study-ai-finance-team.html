@@ -14,7 +14,7 @@
     <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>AI Finance Assistant</span></div>
 
     <header class="course-hero">
-      <span class="eyebrow">🏗️ Case Studies · เคส 29 (จำลองทีม)</span>
+      <span class="eyebrow">🏗️ Case Studies · เคส 30 (จำลองทีม)</span>
       <h1>Building an AI Finance<br>Assistant Team</h1>
       <p class="lead">จำลองทีมผู้ช่วย AI การเงินที่คุยกันจริง พร้อม dashboard — รวบรวมราคา/งบ/ข่าวด้วย Web Search API, สรุปตามกรอบ และออกรายงานพร้อมความเสี่ยง โดยมนุษย์ตัดสินใจขั้นสุดท้าย</p>
       <div class="meta-row"><span>🎮 จำลองแบบ interactive</span><span>📊 ระดับสูง</span><span>🎯 เน้นออกแบบระบบ + ใช้ Claude</span></div>
@@ -73,7 +73,7 @@ model: sonnet
 
     <div class="step"><div class="step-num">2</div><div class="step-body">
       <h3 id="f2">Web Search API — ดึงข่าว/ราคาแบบมี citation</h3>
-      <p><strong>ทำไม:</strong> web search เป็น <em>server tool</em> (Anthropic รันให้) คืนคำตอบพร้อมแหล่งอ้างอิง เหมาะกับข้อมูลเกินวันตัดความรู้ของโมเดล</p>
+      <p>web search เป็น <em>server tool</em> (Anthropic รันให้) คืนคำตอบพร้อมแหล่งอ้างอิง เหมาะกับข้อมูลเกินวันตัดความรู้ของโมเดล</p>
       <pre><code><span class="kw">import</span> anthropic
 client = anthropic.Anthropic()
 response = client.messages.create(

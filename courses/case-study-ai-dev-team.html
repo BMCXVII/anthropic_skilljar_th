@@ -14,7 +14,7 @@
     <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>AI Dev Team</span></div>
 
     <header class="course-hero">
-      <span class="eyebrow">🏗️ Case Studies · เคส 28 (จำลองทีม)</span>
+      <span class="eyebrow">🏗️ Case Studies · เคส 29 (จำลองทีม)</span>
       <h1>Building an AI Dev Team<br>for a Startup Software House</h1>
       <p class="lead">จำลอง "ทีม AI developer" ที่คุยกันจริง พร้อม dashboard — ดูทุก agent ทำงานประสานกันตั้งแต่รับ requirement จนเปิด PR โดยใช้ subagents, Skills จาก Git, MCP, RAG และ Hooks</p>
       <div class="meta-row"><span>🎮 จำลองแบบ interactive</span><span>📊 ระดับสูง</span><span>🎯 ประกอบทุกฟีเจอร์เข้าด้วยกัน</span></div>
@@ -56,7 +56,7 @@
 
     <div class="step"><div class="step-num">1</div><div class="step-body">
       <h3 id="s1">ตั้ง subagent แต่ละบทบาท</h3>
-      <p><strong>ทำไม:</strong> แต่ละ subagent มี context window แยก จำกัด tool/model ตามบทบาท Claude หลัก delegate ให้ตาม <code>description</code></p>
+      <p>แต่ละ subagent มี context window แยก จำกัด tool/model ตามบทบาท Claude หลัก delegate ให้ตาม <code>description</code></p>
       <pre><code><span class="cmt"># .claude/agents/architect.md</span>
 ---
 name: architect
@@ -71,7 +71,7 @@ model: opus
 
     <div class="step"><div class="step-num">2</div><div class="step-body">
       <h3 id="s2">ดึง Skills จาก Git + ผูกกับ agent</h3>
-      <p><strong>ทำไม:</strong> เก็บมาตรฐานทีม (coding-standards, api-conventions) เป็น Skill กลางใน Git ให้ทุกคนใช้เหมือนกัน</p>
+      <p>เก็บมาตรฐานทีม (coding-standards, api-conventions) เป็น Skill กลางใน Git ให้ทุกคนใช้เหมือนกัน</p>
       <pre><code><span class="cmt"># clone skills กลางเข้าโปรเจกต์แล้ว commit</span>
 git clone https://git.example.com/team/team-skills .claude/skills-src
 cp -r .claude/skills-src/coding-standards .claude/skills/

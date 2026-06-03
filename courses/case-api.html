@@ -14,7 +14,7 @@
     <div class="crumbs"><a href="../index.html">หน้าหลัก</a> › <span>Case Studies</span> › <span>API</span></div>
 
     <header class="course-hero">
-      <span class="eyebrow">🏗️ Case Studies · เคส 24</span>
+      <span class="eyebrow">🏗️ Case Studies · เคส 25</span>
       <h1>Case Study: Claude API<br>แชตบอตที่จำบทสนทนา + เรียก tool ได้</h1>
       <p class="lead">โจทย์: ทำผู้ช่วยตอบคำถามที่ <b>คุยต่อเนื่องได้</b> และดึงข้อมูลจริง (เช่น เช็คสภาพอากาศ) ผ่าน <b>tool use</b> — สร้างด้วย Claude API ทีละขั้น</p>
       <div class="meta-row"><span>🎯 ระดับ developer</span><span>🧩 อิงคอร์ส <a class="link" href="claude-api.html">Building with the Claude API</a></span><span>📋 step-by-step</span></div>
@@ -31,7 +31,7 @@ pip install anthropic</code></pre>
 
     <div class="step"><div class="step-num">2</div><div class="step-body">
       <h3 id="s2">บทสนทนาต่อเนื่อง — เก็บ messages เอง</h3>
-      <p><strong>ทำไม:</strong> เพราะ stateless เราต้องสะสม list ของ messages แล้วส่งไปทั้งหมดในแต่ละ request</p>
+      <p>เพราะ stateless เราต้องสะสม list ของ messages แล้วส่งไปทั้งหมดในแต่ละ request</p>
       <pre><code>from anthropic import Anthropic
 client = Anthropic()
 messages = []
